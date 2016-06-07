@@ -1,5 +1,7 @@
 #Scraping the Web
 
+This tutorial represents an explanation of the domain knowledge and technical tools I use to combat human trafficking.  We begin with some background and an example of scraping the web.  And then move onto explaining why scraping the web is important.  After that I present some ways to measure specifics about the human trafficking problem.  And then I take the reader through a detailed description of taking those metrics and turning them into a full blown system for combatting human trafficking.  Enjoy!
+
 [Background and setup](background_and_setup.md)
 
 [A Trival Example](a_trivial_example.md)
