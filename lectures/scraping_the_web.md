@@ -266,6 +266,7 @@ For our application we'll be making use of Flask and SQLAlchemy.  For this we'll
 ```
 pip install flask
 pip install flask-sqlalchemy
+
 ```
 
 Here's the directory structure for our application:
@@ -274,8 +275,90 @@ Here's the directory structure for our application:
 investigator/
 	__init__.py
 	views.py
+	scrapers.py
 	models.py
 	templates/
 		index.html
 ```
 
+We will use Postgres to store our records.
+
+Installing postgres:
+
+Mac: `brew install postgres`
+
+Or
+
+Linux: `sudo apt-get install postgres`
+
+How to postgres (from the command line):
+
+* Listing all the users: `psql -l`
+* Create user: `createuser -P -s -e -d username`
+* Create DB: `createdb [database_name]`
+* running postgresql: `psql [database_name]`
+* delete DB: `dropdb [database_name]`
+
+So we are going to create a user:
+
+`createuser -P -s -e -d eric_s`
+
+Create a database:
+
+`create backpage_ads -U eric_s`
+
+__init__.py:
+
+```
+from flask import Flask
+from flask.ext.script import Manager
+from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.migrate import Migrate, MigrateCommand
+
+username,password = "eric","1234"
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://"+username+":"+password+"@localhost/backpage_ads"
+db = SQLAlchemy(app)
+migrate = Migrate(app,db)
+
+manager = Manager(app)
+manager.add_command('db', MigrateCommand)
+
+from app import views,models
+```
+
+models.py:
+
+```
+from investigator import db
+
+class Backpage(db.Model):
+	__tablename__ = 'backpage'
+	id = db.Column(db.Integer, primary_key=True)
+	timestamp = db.Column(db.Datetime)
+	frequency = db.Columb(db.Integer)
+```
+
+
+
+
+
+views.py:
+
+```
+from investigator import app
+from investigator import db
+from flask import render_template,request
+from investigator.models import *
+from scrapers import backpage_scraper,to_backpage_location
+
+@app.route("/",methods=["GET","POST"])
+def index():
+	if request.method == "POST":
+		url = request.get('website')
+		city = request.get('city')
+		if url == "backpage":
+			backpage_url = to_backpage_location("city")
+			ads = backpage_scraper(backpage_url)
+			for ad in ads:
+				db.session.add()
