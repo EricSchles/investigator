@@ -26,7 +26,7 @@ def plot_simple_timeseries(dates,frequencies,filename):
         "layout":Layout(
             title="Time Series analysis of backpage escort section"
         )
-    })
+    },auto_open=False)
     shutil.move("temp-plot.html",filename)
 
 def visualize_month_over_month():
@@ -62,7 +62,7 @@ def plot_simple_barchart(time_freq,filename):
         "layout":Layout(
             title="Frequency plot every day, every hour of backpage escort section"
         )
-    })
+    },auto_open=False)
     shutil.move("temp-plot.html",filename)
 
 def visualize_day_hour():

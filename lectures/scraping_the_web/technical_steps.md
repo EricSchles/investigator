@@ -56,10 +56,13 @@ from datetime import datetime
 import random
 
 time_frequency = []
+unique_ads = []
 while True:
 	r = requests.get("http://newyork.backpage.com/FemaleEscorts/")
 	html = lxml.html.fromstring(r.text)
 	ads = html.xpath("//div[contains(@class, 'cat')]/a/@href")
+    ads = [elem for elem in ads if elem not in unique_ads]
+    unique_ads += ads
 	time_frequency.append((datetime.now(),len(ads))
 	time.sleep(random.randint(2,700))
 ```
@@ -131,6 +134,14 @@ models.py:
 ```
 from app import db
 
+class AdInfo(db.Model):
+    __tablename__ = 'ad_info'
+    id = db.Column(db.Integer, primary_key=True)
+    ad_title = db.Column(db.String)
+
+    def __init__(self,ad_title):
+        self.ad_title = ad_title
+
 class Backpage(db.Model):
 	__tablename__ = 'backpage'
 	id = db.Column(db.Integer, primary_key=True)
@@ -157,19 +168,41 @@ import requests
 import lxml.html
 import time
 from app import db
-from app.models import Backpage
+from app.models import Backpage,AdInfo
 from datetime import datetime
 import random
 
+def check_for_repeat_ads(titles,ads):
+    unique_titles = [elem.ad_title for elem in AdInfo.query.all()]
+    new_ads = []
+    new_unique_titles = []
+    for ind,val in enumerate(titles):
+        if val in unique_titles:
+            continue
+        else:
+            new_ads.append(ads[ind])
+            new_unique_titles.append(val)
+    for unique_title in new_unique_titles:
+        ad_info = AdInfo(unique_title)
+        db.session.add(ad_info)
+        db.session.commit()
+    return new_ads
+
 def scrape_backpage():
-	while True:
-		r = requests.get("http://newyork.backpage.com/FemaleEscorts/")
-		html = lxml.html.fromstring(r.text)
-		ads = html.xpath("//div[contains(@class, 'cat')]/a/@href")
-		bp = Backpage(datetime.now(),len(ads))
-		db.session.add(bp)
-		db.session.commit()
-		time.sleep(random.randint(2,700))
+    while True:
+        r = requests.get("http://newyork.backpage.com/FemaleEscorts/")
+        html = lxml.html.fromstring(r.text)
+        ads = html.xpath("//div[contains(@class, 'cat')]/a/@href")
+        #handles ads we've already scraped once to avoid over counting
+        titles = [elem.text_content() for elem in html.xpath("//div[contains(@class, 'cat')]/a")]
+        ads = check_for_repeat_ads(titles,ads)
+        if len(ads) == 0:
+            continue
+        bp = Backpage(datetime.now(),len(ads))
+        db.session.add(bp)
+        db.session.commit()
+        time.sleep(random.randint(2,700))
+
 ```
 
 run_scrapers.py:
@@ -274,7 +307,7 @@ def plot_simple_timeseries(dates,frequencies,filename):
         "layout":Layout(
             title="Time Series analysis of backpage escort section"
         )
-    })
+    },auto_open=False)
     shutil.move("temp-plot.html",filename)
 
 def visualize_month_over_month():
@@ -320,12 +353,14 @@ def plot_simple_barchart(time_freq,filename):
         "layout":Layout(
             title="Frequency plot every day, every hour of backpage escort section"
         )
-    })
+    },auto_open=False)
     shutil.move("temp-plot.html",filename)
 
 def visualize_day_hour():
     time_freq = metric_generation.number_of_posts_in_adults_hour_over_hour()
     plot_simple_barchart(time_freq,"app/templates/backpage_day_hour.html")
+
+visualize_day_hour()
 ```
 
 Generates:
@@ -333,5 +368,50 @@ Generates:
 ![](pictures/line_chart.png)
 
 As you can see from the two above charts (with semi-faked data) plotly creates visually pleasing charts, easily.  The real challenge comes from pre-processing the data, which is an acceptable tradeoff.
+
+##Bringing in Views
+
+The views in our program will just show the views.  Running scrapes on the entire country should not be left up to the individual investigators.  Instead a central system administrator or a cohort of technical individuals should administer such scraping.  There will be a central interface, that will allow an admin user to start and stop scrapers at will. (Which is yet to be implemented).
+
+```
+from app import app
+from app import db
+from flask import render_template,request
+from app.models import *
+from app.metric_generation import *
+from app.visualize_metrics import *
+
+@app.route("/",methods=["GET","POST"])
+def index():
+    return render_template("index.html")
+
+@app.route("/unique_posts_hourly",methods=["GET"])
+def number_of_posts_in_adults_hour_over_hour():
+    visualize_day_hour()
+    return render_template("backpage_day_hour.html")
+
+@app.route("/posts_monthly",methods=["GET"])
+def overall_number_of_posts_in_adults_month_over_month():
+    visualize_month_over_month()
+    return render_template("backpage_month_over_month_frequencies.html")
+```
+
+As you can see the views are fairly minimal.  Now we are ready to start using our (minimal) system!
+
+from the command line navigate over to `investigator/` (the top level directory within the web application). 
+
+And then run `python run_scrapers.py`.
+
+Once that has enough scraped data you can see the metrics play out visually :)
+
+to run the server type: `python run_server.py`
+
+And then head over to [http://localhost:5000/posts_monthly](http://localhost:5000/posts_monthly) and 
+[http://localhost:5000/unique_posts_hourly](http://localhost:5000/unique_posts_hourly)!
+
+
+
+
+
 
 
