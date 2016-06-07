@@ -1,0 +1,12 @@
+from app import db
+
+class Backpage(db.Model):
+    __tablename__ = 'backpage'
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime)
+    frequency = db.Column(db.Integer)
+
+    def __init__(self,timestamp,frequency):
+        self.timestamp = timestamp
+        self.frequency = frequency
+        

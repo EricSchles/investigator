@@ -1,0 +1,45 @@
+from app.models import Backpage
+from datetime import datetime
+
+#Hour over Hour analysis - corresponds to metrics of type 2 subtype 1 in lectures/scraping_the_web.md
+def _prepare_for_hour_over_hour_timeseries(datetimes,frequencies):
+    day_hours = {}
+    for ind,time_obj in enumerate(datetimes):
+        day = time_obj.strftime("%A")
+        hour = time_obj.hour
+        if not (day,hour) in day_hours.keys():
+            day_hours[(day,hour)] = frequencies[ind]
+        else:
+            day_hours[(day,hour)] += day_hours[(day,hour)] + (1/ind*(frequencies[ind] - day_hours[(day,hour)])
+    return day_hours
+
+def number_of_posts_in_adults_hour_over_hour():
+    list_of_ads = Backpage.query.all()
+    datetimes = [elem.timestamp for elem in list_of_ads]
+    frequencies = [elem.frequency for elem in list_of_ads]
+    hour_over_hour_frequencies = _prepare_for_hour_over_hour_timeseries(datetimes,frequencies)
+    return hour_over_hour_frequencies
+
+#Month over Month analysis - corresponds to metrics of type 2 subtype 2 in lectures/scraping_the_web.md
+def _prepare_for_month_over_month_timeseries(datetimes,frequencies):
+    year_months = []
+    x_vals = []
+    y_vals = []
+    summation = 0
+    for ind,date in enumerate(datetimes):
+        summation += frequencies[ind]
+        if not (date.year,date.month) in year_months:
+            year_months.append((date.year,date.month))
+            x_vals.append(datetime(year=date.year,month=date.month,day=date.day))
+            y_vals.append(summation)
+            summation = 0
+    return x_vals,y_vals
+
+def overall_number_of_posts_in_adults_month_over_month():
+    list_of_ads = Backpage.query.all()
+    datetimes = [elem.timestamp for elem in list_of_ads]
+    frequencies = [elem.frequency for elem in list_of_ads]
+    month_over_month_frequencies = _prepare_for_month_over_month_timeseries(datetimes,frequencies)
+    return month_over_month_frequencies
+
+

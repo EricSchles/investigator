@@ -1,0 +1,35 @@
+from app import metric_generation
+import shutil
+from collections import OrderedDict
+from helpers import *
+import pandas as pd
+import plotly
+from plotly.graph_objs import Bar,Layout,Scatter, Box, Annotation,Marker,Font,XAxis,YAxis
+import scipy as sp
+from scipy.stats import describe
+from datetime import datetime
+import numpy as np
+from statsmodels.api import formula 
+from app.models import Issues
+import plotly
+from plotly.graph_objs import Bar,Layout
+import scipy as sp
+from scipy.stats import describe
+import code
+import shutil
+from num2words import num2words
+
+def plot_all_timeseries(dates,date_types,filename):
+    for_scatter = []
+    for ind,val in enumerate(dates):
+        timeseries = prepare_for_timeseries(val)
+        x_vals = [elem[0] for elem in timeseries]
+        y_vals = [elem[1] for elem in timeseries]
+        for_scatter.append(Scatter(x=x_vals,y=y_vals,name=date_types[ind]))
+    plotly.offline.plot({
+        "data":for_scatter,
+        "layout":Layout(
+            title="Time Series analysis of dateA,dateB,dateC"
+        )
+    })
+    shutil.move("temp-plot.html",filename)
