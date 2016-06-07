@@ -4,6 +4,7 @@ import time
 from app import db
 from app.models import Backpage
 from datetime import datetime
+import random
 
 def scrape_backpage():
     while True:
@@ -13,4 +14,4 @@ def scrape_backpage():
         bp = Backpage(datetime.now(),len(ads))
         db.session.add(bp)
         db.session.commit()
-        time.sleep(360)
+        time.sleep(random.randint(2,700))

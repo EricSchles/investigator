@@ -232,12 +232,13 @@ So how does this work:
 import requests
 import lxml.html
 import time
+import random
 
 while True:
 	r = requests.get("http://newyork.backpage.com/FemaleEscorts/")
 	html = lxml.html.fromstring(r.text)
 	ads = html.xpath("//div[contains(@class,'cat')]/a/@href")
-	time.sleep(360) #sleep for 6 minutes
+	time.sleep(random.randint(2,700)) #sleep for 6 minutes
 ```
 
 ##Deciding on what to store and how to store it
@@ -249,6 +250,7 @@ import requests
 import lxml.html
 import time
 from datetime import datetime
+import random
 
 time_frequency = []
 while True:
@@ -256,7 +258,7 @@ while True:
 	html = lxml.html.fromstring(r.text)
 	ads = html.xpath("//div[contains(@class, 'cat')]/a/@href")
 	time_frequency.append((datetime.now(),len(ads))
-	time.sleep(360)
+	time.sleep(random.randint(2,700))
 ```
 
 ##Setup our database
@@ -354,6 +356,7 @@ import time
 from app import db
 from app.models import Backpage
 from datetime import datetime
+import random
 
 def scrape_backpage():
 	while True:
@@ -363,7 +366,7 @@ def scrape_backpage():
 		bp = Backpage(datetime.now(),len(ads))
 		db.session.add(bp)
 		db.session.commit()
-		time.sleep(360)
+		time.sleep(random.randint(2,700))
 ```
 
 run_scrapers.py:
