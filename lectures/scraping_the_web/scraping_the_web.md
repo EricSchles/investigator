@@ -20,4 +20,6 @@ This tutorial represents an explanation of the domain knowledge and technical to
 
 [Bringing ideas and technology together](bringing_ideas_and_technology_together.md)
 
-[Technical Steps](technical_steps.md)
+[Technical steps for basic backpage crawler](technical_steps_for_second_backpage_crawler.md)
+
+[Getting hard attributes from a backpage ad](getting_hard_attributes_from_a_backpage_ad.md)
