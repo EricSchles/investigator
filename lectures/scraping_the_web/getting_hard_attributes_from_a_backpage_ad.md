@@ -32,4 +32,5 @@ We'll be storing:
 * body of the ad
 * location information
 * ad pictures
-* 
+
+
