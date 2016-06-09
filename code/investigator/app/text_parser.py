@@ -21,6 +21,7 @@ def letter_to_number(text):
 def verify_phone_number(number):
     """
     verify phone number leverages the twilio api to verify the phone number actually corresponds to an active number.
+    The twilio api for this: https://www.twilio.com/docs/api/lookups
     
     parameters:
     @number - a string representation of a set of digits
