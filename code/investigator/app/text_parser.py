@@ -32,7 +32,27 @@ def verify_phone_number(number):
     else:
         return True
 
-def
+#two competiting implementations of grabbing phone numbers from text
+def phone_number_grab(text):
+    """
+    pulls phone numbers out of structured text
+    
+    parameter:
+    @text - string of unstructured text
+    """
+    phone_numbers = []
+    text = letter_to_number(text)
+    tmp_phone = []
+    for ind,letter in enumerate(text):
+        if letter.isdigit():
+            tmp_phone.append(letter)
+        if len(tmp_phone) == 10 and phone[0] != '1':
+            if verify_phone_number(''.join(tmp_phone)):
+                phone_numbers.append(''.join(tmp_phone))
+        elif len(tmp_phone) == 11 and phone[0] != '1':
+            if verify_phone_number(''.join(tmp_phone)):
+                phone_numbers.append(''.join(tmp_phone))
+    return phone_numbers
     
 def phone_number_parse(text):
     """
@@ -66,6 +86,6 @@ def phone_number_parse(text):
             possible_numbers.append(''.join(phone))
             phone = phone[1:]
         for number in possible_numbers:
-            if self.verify_phone_number(number):
+            if verify_phone_number(number):
                 phone_numbers.append(number)
     return phone_numbers

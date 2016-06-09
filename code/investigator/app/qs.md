@@ -39,3 +39,6 @@ ways to organize:
 Data standard for civic tech:
 
 https://github.com/BetaNYC/civic.json
+
+What language are things in?
+
