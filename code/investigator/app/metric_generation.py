@@ -1,3 +1,18 @@
+"""
+This module prepares different metrics for data visualization it is used in visualize_metrics
+
+test coverage:
+
+presently there is 25% test coverage in tests.py
+
+covered methods:
+_prepare_for_hour_over_hour_timeseries
+
+uncovered methods:
+number_of_posts_in_adults_hour_over_hour
+_prepare_for_month_over_month_timeseries
+overall_number_of_posts_in_adults_month_over_month
+"""
 from app.models import Backpage
 from datetime import datetime
 
