@@ -28,12 +28,12 @@ class BackpageAdInfo(db.Model):
     ad_body = db.Column(db.String)
     photos = db.Column(db.String)
     
-    def __init__(self,ad_title,phone_number,location,ad_body,photos):
+    def __init__(self,ad_title,phone_number,ad_body):#,location,photos):
         self.ad_title = ad_title
         self.phone_number = phone_number
-        self.location = location
+        #self.location = location
         self.ad_body = ad_body
-        self.photos = photos
+        #self.photos = photos
         
 class Backpage(db.Model):
     """

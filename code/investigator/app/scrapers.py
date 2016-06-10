@@ -12,6 +12,7 @@ from app import db
 from app.models import Backpage,BackpageAdInfo
 from datetime import datetime
 import random
+from app.text_parser import phone_number_parse
 
 def check_for_repeat_ads(titles,ads):
     """
@@ -36,8 +37,9 @@ def check_for_repeat_ads(titles,ads):
         else:
             new_ads.append(ads[ind])
             new_unique_titles.append(val)
-    for unique_title in new_unique_titles:
-        ad_info = AdInfo(unique_title)
+    for ind,unique_title in enumerate(new_unique_titles):
+        phone_number,ad_body = scrape_ad(new_ads[ind])
+        ad_info = BackpageAdInfo(unique_title,phone_number,ad_body)
         db.session.add(ad_info)
         db.session.commit()
     return new_ads    
@@ -69,3 +71,9 @@ def scrape_backpage(url):
         db.session.commit()
         time.sleep(random.randint(2,700))
 
+def scrape_ad(url):
+    r = requests.get(url)
+    html = lxml.html.fromstring(r.text)
+    ad_body = [elem.text_content().replace("\r","") for elem in html.xpath("//div[@class='postingBody']")][0]
+    phone_number = phone_number_parse(ad_body)
+    return phone_number, ad_body
