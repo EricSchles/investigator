@@ -1,3 +1,12 @@
+"""
+
+This module holds all the code for directly visualizing our metrics.  We can think of it as a main work horse in our
+set of tools around understanding the human trafficking space.  It should be noted that there will be work on creating textual descriptions as well as visual.
+
+test_coverage:
+
+0% - this will be rememdied soon
+"""
 from app import metric_generation
 import shutil
 from collections import OrderedDict
