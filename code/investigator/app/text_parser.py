@@ -1,3 +1,21 @@
+"""
+This code is used to pull hard attributes out of text from backpage ads and other services related to trafficking
+
+it has 70% test coverage - in tests.py
+
+tested functions:
+
+letter_to_number
+phone_number_parse
+
+untested functions:
+
+verify_phone_number
+"""
+import pickle
+import requests
+import json
+
 def letter_to_number(text):
     """
     This little function simply turns word representations to digit representations of numbers.
@@ -26,35 +44,13 @@ def verify_phone_number(number):
     parameters:
     @number - a string representation of a set of digits
     """
-    data = pickle.load(open("twilio.creds","r"))
+    data = pickle.load(open("twilio.creds","rb"))
     r = requests.get("http://lookups.twilio.com/v1/PhoneNumbers/"+number,auth=data)
-    if "status_code" in json.loads(r.content).keys():
+    if "status_code" in json.loads(r.content.decode("ascii")).keys():
         return False
     else:
         return True
 
-#two competiting implementations of grabbing phone numbers from text
-def phone_number_grab(text):
-    """
-    pulls phone numbers out of structured text
-    
-    parameter:
-    @text - string of unstructured text
-    """
-    phone_numbers = []
-    text = letter_to_number(text)
-    tmp_phone = []
-    for ind,letter in enumerate(text):
-        if letter.isdigit():
-            tmp_phone.append(letter)
-        if len(tmp_phone) == 10 and phone[0] != '1':
-            if verify_phone_number(''.join(tmp_phone)):
-                phone_numbers.append(''.join(tmp_phone))
-        elif len(tmp_phone) == 11 and phone[0] != '1':
-            if verify_phone_number(''.join(tmp_phone)):
-                phone_numbers.append(''.join(tmp_phone))
-    return phone_numbers
-    
 def phone_number_parse(text):
     """
     pulls phone numbers out of structured text
@@ -68,9 +64,11 @@ def phone_number_parse(text):
     counter = 0
     found = False
     possible_numbers = []
+    total_number_array = []
     for ind,letter in enumerate(text):
         if letter.isdigit():
             phone.append(letter)
+            total_number_array.append(letter)
             found = True
         else:
             if found:
@@ -86,7 +84,11 @@ def phone_number_parse(text):
         if len(phone) == 11 and phone[0] == '1':
             possible_numbers.append(''.join(phone))
             phone = phone[1:]
-        for number in possible_numbers:
-            if verify_phone_number(number):
-                phone_numbers.append(number)
+    if not any([len(elem) == 10 or len(elem) == 11 for elem in  possible_numbers]):
+        possible_numbers += [''.join(total_number_array)]
+    for number in possible_numbers:
+        if verify_phone_number(number):
+            phone_numbers.append(number)
+    if len(phone_numbers) == 1:
+        return phone_numbers[0]
     return phone_numbers
