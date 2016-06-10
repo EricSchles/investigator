@@ -1,3 +1,10 @@
+"""
+Here we define our scrapers,  currently only backpage is defined.
+
+test_coverage:
+
+0% - this will be remedied soon.
+"""
 import requests
 import lxml.html
 import time

@@ -2,7 +2,4 @@ language: python
 python:
    - "3.5"
 install: "pip install -r requirements.txt"
-before_script:
-   - cd code
-   - cd investigator
-script: nosetests tests.py
+script: nosetests $TRAVIS_BUILD_DIRtests.py
