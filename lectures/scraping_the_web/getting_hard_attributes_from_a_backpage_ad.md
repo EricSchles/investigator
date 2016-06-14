@@ -97,8 +97,88 @@ As you can see, usaddress handles poorly formed addresses (specifically ones out
 
 At this point we have the semantic parsing complete, now we need a tool to get lat/long coordinates from a well formed address.  And if the address is poorly formed, we can make it well formed with the semantic parser we defined above!
 
+All our examples will come from geopy - to get it open a command line and type:
 
+`pip install geopy`
 
+The geopy library is amazing!  It has lots of utilities for doing things with geographic data.  We'll be making use of it's geocoders api.  A geocoder is way of taking an address in and returning a latitude/longitude coordinate for that address.  The geopy library comes with lots of different geocoders, we'll be making use of a few of them.  First let's look at Nominatim (because it's free as in beer).  You can see [the docs for geopy here](https://geopy.readthedocs.io/en/1.10.0/).
 
+```
+>>> from geopy.geocoders import Nominatim
+>>> encoder = Nominatim()
+>>> location = encoder.geocode("251 Mercer Street, New York, NY, 10003")
+>>> location
 
+Location(NYU Courant Institute of Mathematical Sciences, 251, Mercer Street, Washington Square Village, Manhattan, New York County, NYC, New York, 10012, United States of America, (40.7286994, -73.995715, 0.0))
+
+>>> dir(location)
+
+['__class__', '__delattr__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__init__', '__iter__', '__le__', '__len__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__slots__', '__str__', '__subclasshook__', '__unicode__', '_address', '_point', '_raw', '_tuple', 'address', 'altitude', 'latitude', 'longitude', 'point', 'raw']
+```
+
+As you can see, we get back a Location object with lots and lots of great information, among other things, the latitude/longitude.  We can access the latitude and longitude by calling:
+
+```
+>>> location.latitude
+>>> location.longitude
+```
+
+This tends to work pretty well when you have well formed addresses.  So now let's put together our two components to get our latitude / longitude.
+
+First we'll need some utility functions to ensure our address appears in the correct form:
+
+```
+import usaddress
+from geopy.geocoders import Nominatim
+
+def format_streetname_post_type(post_type):
+    if post_type.lower() == "st.":
+        return "Street"
+    elif post_type.lower() == "ct." or post_type.lower() == 'crt.':
+        return "Court"
+    else:
+    	return post_type
+
+def format_address(addr):
+    addr_components = usaddress.parse(addr)
+    dicter = {}
+    for component in addr_components:
+        if not component[1] in dicter.keys():
+            dicter[component[1]] = component[0]
+        else:
+            dicter[component[1]] += " "+component[0]
+    return dicter["AddressNumber"] + " " + dicter["StreetName"] + " " + dicter["StreetNamePostType"] + " " + dicter["PlaceName"] + " " + dicter["StateName"] + " "+ dicter["ZipCode"]
+
+encoder = Nominatim()
+location = encoder.geocode(format_address("251 Mercer St. , New York, NY,  10003"))
+print(location.latitude)
+print(location.longitude)
+```
+
+Now we are guaranteed, assuming we only get an address, we will be able to get back the latitude / longitude.  What happens when we get more than an address?  Like an address inside of "unstructured text"?
+
+```
+#... snip from last piece of code ...
+>>> location = encoder.geocode(format_address("Hello my name is Eric and I went to school at NYU, specifically:  251 Mercer St. , New York, NY,  10003"))
+>>> location
+Location(NYU Courant Institute of Mathematical Sciences, 251, Mercer Street, Washington Square Village, Manhattan, New York County, NYC, New York, 10012, United States of America, (40.7286994, -73.995715, 0.0))
+```
+
+Holy smokes!  We got the same information, given an address embedded in free form text!  So, we can get the address information if it's not in the correct order AND if it's among other pieces of text we don't care about.  
+
+Okay, so can we do better? Well, what does better mean at this point?  For me, it means handling addresses with missing information, and still getting an approximation of a precise location.  
+
+The first thing we'll do is get a relative address, without zipcode, or exact street address.  To do this, we'll make use of google's geoencoder, which is totally bad ass!  It can handle cross streets, no zip code, and a bunch more craziness.
+
+This will add another layer of complexity - we'll need key's to use google's geoencoder.  But the nice thing is, we can still use geopy to actually make our calls.
+
+Getting an api key for address lookups from google isn't too bad.  There's a little bit more search required within their documentation than I would like, but whatever.
+
+If you're generally interested in maps check out [this page](https://developers.google.com/maps/)
+Here's some documentation for the [geoencoder api](https://developers.google.com/maps/documentation/geocoding/start).
+
+And finally, here's the documentation on creating a [google geoencoder api](https://developers.google.com/maps/documentation/geocoding/start#get-a-key).
+
+![](pictures/get_api_key_google.png)
 ###Parsing Phone number information
+

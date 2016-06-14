@@ -12,9 +12,14 @@ untested functions:
 
 verify_phone_number
 """
+#for phone number parsing
 import pickle
 import requests
 import json
+
+#for address parsing
+import usaddress
+from geopy.geocoders import Nominatim
 
 def letter_to_number(text):
     """
@@ -93,4 +98,20 @@ def phone_number_parse(text):
         return phone_numbers[0]
     return phone_numbers
 
-
+def format_streetname_post_type(post_type):
+    if post_type.lower() == "st.":
+        return "Street"
+    elif post_type.lower() == "ct." or post_type.lower() == 'crt.':
+        return "Court"
+    else:
+        return post_type
+    
+def format_address(addr):
+    addr_components = usaddress.parse(addr)
+    dicter = {}
+    for component in addr_components:
+        if not component[1] in dicter.keys():
+            dicter[component[1]] = component[0]
+        else:
+            dicter[component[1]] += " "+component[0]
+    return dicter["AddressNumber"] + " " + dicter["StreetName"] + " " + format_streetname_post_type(dicter["StreetNamePostType"]) + " " + dicter["PlaceName"] + " " + dicter["StateName"] + " "+ dicter["ZipCode"]
