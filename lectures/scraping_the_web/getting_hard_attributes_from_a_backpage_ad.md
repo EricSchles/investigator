@@ -179,6 +179,26 @@ Here's some documentation for the [geoencoder api](https://developers.google.com
 
 And finally, here's the documentation on creating a [google geoencoder api](https://developers.google.com/maps/documentation/geocoding/start#get-a-key).
 
+We'll be clicking on the "GET A KEY" button:
+
 ![](pictures/get_api_key_google.png)
+
+We'll click continue on this screen ("create a new project"):
+
+![](pictures/create_a_new_project_google.png)
+
+Now we'll name our project investigator (feel free to name this whatever you want).
+
+![](pictures/project_name_google.png)
+
+On the next screen, you'll see an api key - unfortunately I can't show you that screen without showing you my api key.  Copy the key and doing the following from a python repl:
+
+```
+>>> import pickle
+>>> api_key="Your API KEY goes here"
+>>> pickle.dump(api_key,open("google_geocoder_api.creds","wb"))
+```
+
+
 ###Parsing Phone number information
 
