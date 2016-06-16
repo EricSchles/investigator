@@ -220,9 +220,34 @@ WOW.  Google - the tech is strong with you.  Okay, so let's see what happens whe
 Location(5th Ave, New York, NY, USA, (40.774734, -73.96538439999999, 0.0))
 ```
 
-Okay, so google doesn't do terribly, but also not as good.  To get at this relative address information we are going to make use of something called [named-entity recognition](https://en.wikipedia.org/wiki/Named-entity_recognition).  Entity recognition allows us to apply high level semantic labels to pieces of text.  It's similar to [part of speech tagging](https://en.wikipedia.org/wiki/Part-of-speech_tagging).
+Okay, so google doesn't do terribly, but also not as good.  But no fear!  usaddress to the rescue!  Turns out we can get multiple addresses out of usaddress, no problem!!
 
-In order to understand this, check out [a quick digression into machine learning](intro_to_machine_learning.md) and then [text classification](text_classification.md)
+```
+import usaddress
+>>> usaddress.parse("I'm at the corner of Lexington and 51 st.")
+[("I'm", 'Recipient'), ('at', 'Recipient'), ('the', 'Recipient'), ('corner', 'Recipient'), ('of', 'AddressNumber'), ('Lexington', 'StreetName'), ('and', 'StreetName'), ('51', 'StreetName'), ('st.', 'StreetNamePostType')]
+```
+
+So to make use of relative locations all we need to do is:
+
+```
+parsed_text = usaddress.parse("I'm at the corner of Lexington and 51 st."))
+for ind,word in enumerate(parsed_text):
+     if word[1] == "StreetName":
+             if word[0] not in ["and","or","near","between"]:
+                     if ind+1 < len(parsed_text):
+                             if parsed_text[ind+1][1] == "StreetNamePostType": 
+                                     streetnames.append(word[0]+ " " + parsed_text[ind+1][0])
+                             else:
+                                     streetnames.append(word[0])
+                     else:
+                             streetnames.append(word[0])
+>>> streetnames
+['Lexington', '51 st.'] 
+```
+
+And then we can pass street ' and '.join(streetnames) + place to google!
+
 
 ###Parsing Phone number information
 

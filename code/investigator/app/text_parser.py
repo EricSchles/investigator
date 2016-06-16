@@ -19,7 +19,7 @@ import json
 
 #for address parsing
 import usaddress
-from geopy.geocoders import Nominatim
+from geopy.geocoders import Nominatim, GoogleV3
 
 def letter_to_number(text):
     """
@@ -115,3 +115,34 @@ def format_address(addr):
         else:
             dicter[component[1]] += " "+component[0]
     return dicter["AddressNumber"] + " " + dicter["StreetName"] + " " + format_streetname_post_type(dicter["StreetNamePostType"]) + " " + dicter["PlaceName"] + " " + dicter["StateName"] + " "+ dicter["ZipCode"]
+
+def address_is_complete(text):
+    streetname_exists = False
+    streetnumber_exists = False
+    cross_street = False
+    num_streets = 0
+    for elem in usaddress.parse(text):
+        if "StreetName" == elem[1]:
+            streetname_exists = True
+            num_streets += 1
+        if "AddressNumber" == elem[1] and elem[1].isdigit():
+            streetnumber_exists = True
+    if streetname_exists and streetnumber_exists:
+        return "complete"
+    elif num_streets > 1 and not streetnumber_exists:
+        return "cross street"
+    
+        
+def get_lat_long(text):
+    try:
+        formatted_text = format_address(text)
+        nominatim_encoder = Nominatim()
+        location = nominatim_encoder.geocode(formatted_text)
+    except:
+        google_api_key = pickle.load(open("google_geocoder_api.creds","rb"))
+        google_encoder = GoogleV3(api_key)
+
+        
+        google_encoder.geocode(text)
+    return location.latitude, location.longitude
+
