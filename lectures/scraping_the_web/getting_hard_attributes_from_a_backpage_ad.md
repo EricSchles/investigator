@@ -248,6 +248,84 @@ for ind,word in enumerate(parsed_text):
 
 And then we can pass street ' and '.join(streetnames) + place to google!
 
+Here's our finished functions for parsing address information:
+
+```
+import pickle
+import requests
+import json
+import usaddress
+from geopy.geocoders import Nominatim, GoogleV3
+
+def format_streetname_post_type(post_type):
+    if post_type.lower() == "st.":
+        return "Street"
+    elif post_type.lower() == "ct." or post_type.lower() == 'crt.':
+        return "Court"
+    else:
+        return post_type
+    
+def format_address(addr):
+    addr_components = usaddress.parse(addr)
+    dicter = {}
+    for component in addr_components:
+        if not component[1] in dicter.keys():
+            dicter[component[1]] = component[0]
+        else:
+            dicter[component[1]] += " "+component[0]
+    return dicter["AddressNumber"] + " " + dicter["StreetName"] + " " + format_streetname_post_type(dicter["StreetNamePostType"]) + " " + dicter["PlaceName"] + " " + dicter["StateName"] + " "+ dicter["ZipCode"]
+
+def address_is_complete(text):
+    streetname_exists = False
+    streetnumber_exists = False
+    cross_street = False
+    num_streets = 0
+    for elem in usaddress.parse(text):
+        if "StreetName" == elem[1]:
+            streetname_exists = True
+            num_streets += 1
+        if "AddressNumber" == elem[1] and elem[1].isdigit():
+            streetnumber_exists = True
+    if streetname_exists and streetnumber_exists:
+        return "complete"
+    elif num_streets > 1 and not streetnumber_exists:
+        return "cross street"
+    else:
+        return "no address information"
+
+def get_streetnames(text):
+    parsed_text = usaddress.parse("I'm at the corner of Lexington and 51 st."))
+    for ind,word in enumerate(parsed_text):
+        if word[1] == "StreetName":
+            if word[0] not in ["and","or","near","between"]:
+                if ind+1 < len(parsed_text):
+                    if parsed_text[ind+1][1] == "StreetNamePostType": 
+                        streetnames.append(word[0]+ " " + parsed_text[ind+1][0])
+                    else:
+                        streetnames.append(word[0])
+                else:
+                    streetnames.append(word[0])
+    return streetnames
+
+def get_lat_long(text,place):
+    try:
+        formatted_text = format_address(text)
+        nominatim_encoder = Nominatim()
+        location = nominatim_encoder.geocode(formatted_text)
+    except:
+        google_api_key = pickle.load(open("google_geocoder_api.creds","rb"))
+        google_encoder = GoogleV3(api_key)
+        parsed_text = address_is_complete(text)
+        if parsed_text == "complete":
+            location = google_encoder(text)
+        elif parsed_text == "cross street":
+            location = google_encoder(' and '.join(get_streetnames(text)) + place)
+        elif parsed_text == 'no address information':
+            return "no address information"
+    return location.latitude, location.longitude
+```
+
+
 
 ###Parsing Phone number information
 

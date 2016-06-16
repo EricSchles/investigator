@@ -131,9 +131,24 @@ def address_is_complete(text):
         return "complete"
     elif num_streets > 1 and not streetnumber_exists:
         return "cross street"
-    
-        
-def get_lat_long(text):
+    else:
+        return "no address information"
+
+def get_streetnames(text):
+    parsed_text = usaddress.parse("I'm at the corner of Lexington and 51 st."))
+    for ind,word in enumerate(parsed_text):
+        if word[1] == "StreetName":
+            if word[0] not in ["and","or","near","between"]:
+                if ind+1 < len(parsed_text):
+                    if parsed_text[ind+1][1] == "StreetNamePostType": 
+                        streetnames.append(word[0]+ " " + parsed_text[ind+1][0])
+                    else:
+                        streetnames.append(word[0])
+                else:
+                    streetnames.append(word[0])
+    return streetnames
+
+def get_lat_long(text,place):
     try:
         formatted_text = format_address(text)
         nominatim_encoder = Nominatim()
@@ -141,8 +156,12 @@ def get_lat_long(text):
     except:
         google_api_key = pickle.load(open("google_geocoder_api.creds","rb"))
         google_encoder = GoogleV3(api_key)
-
-        
-        google_encoder.geocode(text)
+        parsed_text = address_is_complete(text)
+        if parsed_text == "complete":
+            location = google_encoder(text)
+        elif parsed_text == "cross street":
+            location = google_encoder(' and '.join(get_streetnames(text)) + place)
+        elif parsed_text == 'no address information':
+            return "no address information"
     return location.latitude, location.longitude
 
