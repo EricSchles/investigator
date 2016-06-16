@@ -170,8 +170,11 @@ def get_lat_long(text,place):
             location = google_encoder.geocode(' and '.join(get_streetnames(text)) + place)
         elif parsed_text == 'no address information':
             return "no address information","no address information"
-    return location.latitude, location.longitude
-
+    if location:
+        return location.latitude, location.longitude
+    else:
+        return "no address information","no address information"
+    
 def clean_location_string(text):
     return text.replace("&"," ").replace("\r"," ").replace("\n"," ").replace("Location:","").replace("•","").strip()
 
