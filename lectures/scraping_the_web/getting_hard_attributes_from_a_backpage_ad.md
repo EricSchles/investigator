@@ -199,6 +199,30 @@ On the next screen, you'll see an api key - unfortunately I can't show you that 
 >>> pickle.dump(api_key,open("google_geocoder_api.creds","wb"))
 ```
 
+If you are using github it's worth noting that my .gitignore has `*.creds`, if you don't like that extension for whatever reason, feel free to choose your own adventure for your credentials extension :)
+
+Okay, so now that we went through those extra steps, let's check out the pay off:
+
+```
+>>> from geopy.geocoders import GoogleV3
+>>> import pickle
+>>> api_key = pickle.load(open("google_geocoder_api.creds","rb"))
+>>> encoder = GoogleV3(api_key)
+>>> encoder.geocode("14th street and 5th ave., New York, NY")
+Location(5th Ave & W 14th St, New York, NY 10011, USA, (40.7360158, -73.9936331, 0.0))
+```
+
+WOW.  Google - the tech is strong with you.  Okay, so let's see what happens when we put in free form text, do we even need to format things with `usaddress` now?
+
+```
+#... snipped from the previous piece of code
+>>> encoder.geocode("Hello my name is Eric and I want to go to 14th street and 5th ave., New York, NY")
+Location(5th Ave, New York, NY, USA, (40.774734, -73.96538439999999, 0.0))
+```
+
+Okay, so google doesn't do terribly, but also not as good.  To get at this relative address information we are going to make use of something called [named-entity recognition](https://en.wikipedia.org/wiki/Named-entity_recognition).  Entity recognition allows us to apply high level semantic labels to pieces of text.  It's similar to [part of speech tagging](https://en.wikipedia.org/wiki/Part-of-speech_tagging).
+
+In order to understand this, check out [a quick digression into machine learning](intro_to_machine_learning.md) and then [text classification](text_classification.md)
 
 ###Parsing Phone number information
 
