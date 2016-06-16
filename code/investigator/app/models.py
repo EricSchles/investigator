@@ -16,24 +16,34 @@ class BackpageAdInfo(db.Model):
     @ad_title - used primarily to uniquely identify backpage ads - since titles are unique
     @phone_number - the phone number used in the ad, can be empty.  This number is stored as a string
     since it should be thought of as immutable.
-    @location - the location mentioned in the advertisement - the location is stored as a string of form (latitude, longitude)
+    @location - the location mentioned in the advertisement 
+    @latitude - latitude derived from the location mentioned in the advertisement
+    @longitude - longitude derived from the location mentioned in the advertisement
     @ad_body - the long form text in the ad
     @photos - a filepath link to the set of pictures downloaded for the ad
+    @post_id - an id for each backpage post from backpage
     """
     __tablename__ = 'ad_info'
     id = db.Column(db.Integer, primary_key=True)
     ad_title = db.Column(db.String)
     phone_number = db.Column(db.String)
     location = db.Column(db.String)
+    latitude = db.Column(db.String)
+    longitude = db.Column(db.String)
     ad_body = db.Column(db.String)
     photos = db.Column(db.String)
+    post_id = db.Column(db.String)
     
-    def __init__(self,ad_title,phone_number,ad_body):#,location,photos):
+    def __init__(self,ad_title,phone_number,ad_body,location,latitude,longitude,photos,post_id):
         self.ad_title = ad_title
         self.phone_number = phone_number
-        #self.location = location
+        self.location = location
+        self.latitude = latitude
+        self.longitude = longitude
         self.ad_body = ad_body
-        #self.photos = photos
+        self.photos = photos
+        self.post_id = post_id
+        
         
 class Backpage(db.Model):
     """

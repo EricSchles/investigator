@@ -2,10 +2,13 @@
 
 Now that we have a sense of the national level, a sense of the local level, we are ready to start thinking about other types of measurement.  There is a lot of discussion around hard metrics - data that cannot be faked and that matters for investigators.  For this we will use phone numbers, and locations.  These pieces of information don't just tell us something important in general like,
 
-* an upper bound on the number of unique posters per day,
-* an upper bound on the number of unique posters per day per hour,
-* the number of unique phone numbers posted per day
-* the frequency of use, by location
+* an average of the number of unique posters per day of the week,
+* a upper and lower bound of the number of unique posters per day of the week,
+* an average of the number of unique posters per day per hour,
+* a upper and lower bound of the number of unique posters per day per hour,
+* the number of unique phone numbers posted per day over time
+* the frequency of use, by location, on average
+* the frequency of use, by location, over time
 
 They can also be used directly by investigators to link a case to a set of ads.  We care about this, because most human trafficking cases come into an investigator as domestic violence and then it is on the investigator to prove the link to human trafficking.  At this point a formal legal definition makes sense:
 

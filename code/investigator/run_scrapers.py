@@ -1,8 +1,8 @@
 from app import scrapers
 
-urls = ["http://newyork.backpage.com/FemaleEscorts/"]
+url_places = [("http://newyork.backpage.com/FemaleEscorts/","NYC")]
 
-for url in urls:
+for url_place in url_places:
     print("starting scraper..")
-    scrapers.scrape_backpage(url)
+    scrapers.scrape_backpage(url_place[0],url_place[1])
     print("running scraper")

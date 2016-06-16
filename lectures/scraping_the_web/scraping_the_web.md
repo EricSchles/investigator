@@ -23,3 +23,5 @@ This tutorial represents an explanation of the domain knowledge and technical to
 [Technical steps for basic backpage crawler](technical_steps_for_second_backpage_crawler.md)
 
 [Getting hard attributes from a backpage ad](getting_hard_attributes_from_a_backpage_ad.md)
+
+[Making use of hard attributes](making_use_of_hard_attributes.md)

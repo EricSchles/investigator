@@ -1,7 +1,7 @@
 """
 This code is used to pull hard attributes out of text from backpage ads and other services related to trafficking
 
-it has 70% test coverage - in tests.py
+it has 25% test coverage - in tests.py
 
 tested functions:
 
@@ -11,6 +11,12 @@ phone_number_parse
 untested functions:
 
 verify_phone_number
+address_is_complete
+get_streetnames
+get_lat_long
+format_address
+format_streetname_post_type
+
 """
 #for phone number parsing
 import pickle
@@ -135,7 +141,8 @@ def address_is_complete(text):
         return "no address information"
 
 def get_streetnames(text):
-    parsed_text = usaddress.parse("I'm at the corner of Lexington and 51 st."))
+    streetnames = []
+    parsed_text = usaddress.parse(text)
     for ind,word in enumerate(parsed_text):
         if word[1] == "StreetName":
             if word[0] not in ["and","or","near","between"]:
@@ -155,13 +162,18 @@ def get_lat_long(text,place):
         location = nominatim_encoder.geocode(formatted_text)
     except:
         google_api_key = pickle.load(open("google_geocoder_api.creds","rb"))
-        google_encoder = GoogleV3(api_key)
+        google_encoder = GoogleV3(google_api_key)
         parsed_text = address_is_complete(text)
         if parsed_text == "complete":
-            location = google_encoder(text)
+            location = google_encoder.geocode(text)
         elif parsed_text == "cross street":
-            location = google_encoder(' and '.join(get_streetnames(text)) + place)
+            location = google_encoder.geocode(' and '.join(get_streetnames(text)) + place)
         elif parsed_text == 'no address information':
-            return "no address information"
+            return "no address information","no address information"
     return location.latitude, location.longitude
 
+def clean_location_string(text):
+    return text.replace("&"," ").replace("\r"," ").replace("\n"," ").replace("Location:","").replace("•","").strip()
+
+def strip_post_id(text):
+    return text.split(": ")[1].split(" ")[0]

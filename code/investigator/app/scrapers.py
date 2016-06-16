@@ -1,5 +1,6 @@
 """
-Here we define our scrapers,  currently only backpage is defined.
+Here we define our scrapers,  currently only backpage is defined.  The main work horse of this model is the scrape_backpage method.
+Here we make use of text_parser.py as well as models.py.
 
 test_coverage:
 
@@ -12,9 +13,9 @@ from app import db
 from app.models import Backpage,BackpageAdInfo
 from datetime import datetime
 import random
-from app.text_parser import phone_number_parse
+from app.text_parser import phone_number_parse, get_lat_long,clean_location_string,strip_post_id
 
-def check_for_repeat_ads(titles,ads):
+def check_for_repeat_ads(titles,ads,place):
     """
     This method checks for repeat ads.  The problem is ads update in a unpredictable fashion, therefore you don't want to store ads
     that you've already scraped.  This method checks the ad's already scraped and compares titles.  If the titles are different,
@@ -38,13 +39,13 @@ def check_for_repeat_ads(titles,ads):
             new_ads.append(ads[ind])
             new_unique_titles.append(val)
     for ind,unique_title in enumerate(new_unique_titles):
-        phone_number,ad_body = scrape_ad(new_ads[ind])
-        ad_info = BackpageAdInfo(unique_title,phone_number,ad_body)
+        phone_number, ad_body,location,latitude, longitude, post_id = scrape_ad(new_ads[ind],place)
+        ad_info = BackpageAdInfo(unique_title,phone_number,ad_body,location,latitude,longitude,'',post_id)#photo has not been handled yet
         db.session.add(ad_info)
         db.session.commit()
     return new_ads    
     
-def scrape_backpage(url):
+def scrape_backpage(url,place):
     """
     This method scrapes backpages female escort service. it is documented in some detail in lectures/technical_steps_for_second_backpage_crawler.md
     but just to clarify what's going on - we are simply going to the most recent ads on backpage and continuously scraping the ads new content.
@@ -63,7 +64,7 @@ def scrape_backpage(url):
         ads = html.xpath("//div[contains(@class, 'cat')]/a/@href")
         #handles ads we've already scraped once to avoid over counting
         titles = [elem.text_content() for elem in html.xpath("//div[contains(@class, 'cat')]/a")]
-        ads = check_for_repeat_ads(titles,ads)
+        ads = check_for_repeat_ads(titles,ads,place)
         if len(ads) == 0:
             continue
         bp = Backpage(datetime.now(),len(ads))
@@ -71,9 +72,16 @@ def scrape_backpage(url):
         db.session.commit()
         time.sleep(random.randint(2,700))
 
-def scrape_ad(url):
+def scrape_ad(url,place):
     r = requests.get(url)
     html = lxml.html.fromstring(r.text)
     ad_body = [elem.text_content().replace("\r","") for elem in html.xpath("//div[@class='postingBody']")][0]
+    extra_info = html.xpath("//div[@style='padding-left:2em;']")
+    location = [elem.text_content() for elem in extra_info if "Location:" in elem.text_content()][0]
+    post_id = [elem.text_content() for elem in extra_info if "Post ID:" in elem.text_content()][0]
+    other_ads = [elem for elem in html.xpath("//a/@href") if "backpage" in elem]
     phone_number = phone_number_parse(ad_body)
-    return phone_number, ad_body
+    location = clean_location_string(location)
+    post_id = strip_post_id(post_id)
+    latitude,longitude = get_lat_long(location,place)
+    return phone_number, ad_body,location,str(latitude),str(longitude),post_id
