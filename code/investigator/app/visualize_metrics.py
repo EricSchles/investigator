@@ -46,7 +46,6 @@ def visualize_month_over_month():
     months,frequencies = metric_generation.overall_number_of_posts_in_adults_month_over_month()
     plot_simple_timeseries(months,frequencies,"app/templates/backpage_month_over_month_frequencies.html")
 
-    
 def order_day_hour(vals):
     dicter = OrderedDict({})
     dicter["Monday"] = []

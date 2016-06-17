@@ -47,14 +47,13 @@ def _prepare_for_month_over_month_timeseries(datetimes,frequencies):
     year_months = []
     x_vals = []
     y_vals = []
-    summation = 0
-    for ind,date in enumerate(datetimes):
-        summation += frequencies[ind]
+    for date in datetimes:
         if not (date.year,date.month) in year_months:
+            cur_year = date.year
+            cur_month = date.month
             year_months.append((date.year,date.month))
             x_vals.append(datetime(year=date.year,month=date.month,day=date.day))
-            y_vals.append(summation)
-            summation = 0
+            y_vals.append(sum([frequencies[index] for index,elem in enumerate(datetimes) if elem.year==cur_year and elem.month==cur_month]))
     return x_vals,y_vals
 
 #Unique versions of the above metrics
@@ -67,14 +66,13 @@ def _prepare_for_unique_month_over_month_timeseries(datetimes):
     year_months = []
     x_vals = []
     y_vals = []
-    summation = 0
     for ind,date in enumerate(datetimes):
-        summation += 1
         if not (date.year,date.month) in year_months:
+            cur_year = date.year
+            cur_month = date.month
             year_months.append((date.year,date.month))
             x_vals.append(datetime(year=date.year,month=date.month,day=date.day))
-            y_vals.append(summation)
-            summation = 0
+            y_vals.append(len([datetime for datetime in datetimes if datetime.year==cur_year and datetime.month==cur_month]))
     return x_vals,y_vals
 
 def unique_posts_per_hour_day_of_the_week():
