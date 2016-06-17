@@ -50,6 +50,10 @@ def _prepare_for_month_over_month_timeseries(datetimes,frequencies):
             summation = 0
     return x_vals,y_vals
 
+def get_locations():
+    list_of_ads = BackpageAdInfo.query.all()
+    return [[ad.longitude,ad.latitude] for ad in list_of_ads if ad.latitude != 'no address information' and ad.longitude !='no address information' and ad.latitude and ad.longitude]
+    
 def _prepare_for_unique_month_over_month_timeseries(datetimes):
     year_months = []
     x_vals = []
@@ -81,6 +85,7 @@ def get_unique_ads():
     unique_ads = []
     for ad in list_of_ads:
         parsed_number = parse_number(ad.phone_number)
+        if parsed_number == None: continue
         if len(parsed_number) > 1:
             if len([number for number in parsed_number if number not in seen_phone_numbers]) == len(parsed_number):
                 seen_phone_numbers += parsed_number
@@ -89,7 +94,7 @@ def get_unique_ads():
             if parsed_number not in seen_phone_numbers:
                 unique_ads.append(ad)
                 seen_phone_numbers.append(parsed_number)
-    return [elem.timestamp for elem in unique_ads]
+    return [elem.timestamp for elem in unique_ads if elem.timestamp]
     
 def overall_number_of_unique_posts_in_adults_month_over_month():
     datetimes = get_unique_ads()
@@ -109,6 +114,8 @@ def _prepare_for_unique_hour_over_hour_timeseries(datetimes):
     return day_hours
 
 def parse_number(phone_numbers):
+    if phone_numbers == None:
+        return phone_numbers
     if "{" in phone_numbers and "}" in phone_numbers:
         phone_numbers = phone_numbers.strip("{").strip("}")
         return phone_numbers.split(",")

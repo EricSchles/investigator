@@ -1,0 +1,26 @@
+<html>
+<head>
+<title></title>
+<script src='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />	 
+</head>
+<body>
+
+<div id="map" style="width: 600px; height: 400px"></div>
+
+<div align="center">
+
+
+<script>
+	var locations = JSON.parse({{locations|tojson}});
+	
+	L.mapbox.accessToken = 'pk.eyJ1IjoiZXJpY3NjaGxlcyIsImEiOiI5Zjk4MjVkZTZlMjAwM2I3OTY2OTI4MTJmODVkN2Q3MCJ9.1gRox8Gx76YqrBJiCsxLLQ';
+		
+	var map = L.mapbox.map('map', 'mapbox.streets')
+	.setView([locations[1]["geometry"]["coordinates"][1],locations[1]["geometry"]["coordinates"][0]],11)
+	.featureLayer.setGeoJSON(locations);
+	
+</script>
+
+ 		</body>
+ 		</html> 

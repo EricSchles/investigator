@@ -75,13 +75,26 @@ def scrape_backpage(url,place):
 def scrape_ad(url,place):
     r = requests.get(url)
     html = lxml.html.fromstring(r.text)
-    ad_body = [elem.text_content().replace("\r","") for elem in html.xpath("//div[@class='postingBody']")][0]
+    try:
+        ad_body = [elem.text_content().replace("\r","") for elem in html.xpath("//div[@class='postingBody']")][0]
+    except IndexError:
+        #this means we don't have an ad body and thus there will be little to no useful information here.
+        #and therefore we return only empty strings
+        return '','','','','','',''
     extra_info = html.xpath("//div[@style='padding-left:2em;']")
-    location = [elem.text_content() for elem in extra_info if "Location:" in elem.text_content()][0]
-    post_id = [elem.text_content() for elem in extra_info if "Post ID:" in elem.text_content()][0]
+    try:
+        location = [elem.text_content() for elem in extra_info if "Location:" in elem.text_content()][0]
+        location = clean_location_string(location)
+        latitude,longitude = get_lat_long(location,place)
+    except IndexError:
+        location = ''
+    try:
+        post_id = [elem.text_content() for elem in extra_info if "Post ID:" in elem.text_content()][0]
+        post_id = strip_post_id(post_id)
+    except IndexError:
+        post_id = ''
+        
     other_ads = [elem for elem in html.xpath("//a/@href") if "backpage" in elem]
     phone_number = phone_number_parse(ad_body)
-    location = clean_location_string(location)
-    post_id = strip_post_id(post_id)
-    latitude,longitude = get_lat_long(location,place)
+
     return phone_number, ad_body,location,str(latitude),str(longitude),post_id,datetime.now()

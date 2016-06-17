@@ -84,5 +84,5 @@ def visualize_day_hour():
     plot_simple_barchart(time_freq,"app/templates/backpage_day_hour.html")
 
 def visualize_unique_day_hour():
-    time_freq = metric_generation.number_of_posts_in_adults_hour_over_hour()
-    plot_simple_barchart(time_freq,"app/templates/backpage_day_hour.html")
+    time_freq = metric_generation.unique_posts_per_hour_day_of_the_week()
+    plot_simple_barchart(time_freq,"app/templates/unique_backpage_day_hour.html")
