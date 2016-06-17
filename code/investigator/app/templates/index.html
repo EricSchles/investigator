@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Information form">
+    <meta name="author" content="email@website.com"> <!-- email goes here! -->
+
+    <title>Investigator</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/grayscale.css' ) }}" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="{{ url_for('static', filename='font-awesome-4.2.0/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+    body {
+      background-image: "{{ url_for('static',filename='img/intro-bg.jpg') }}"
+    }
+    .img-wrap, h1 {
+        text-align: center;
+    }
+    .img-wrap a img{
+        display: block;
+    }
+    .img-wrap > a {
+        display: inline-block;
+        vertical-align: middle;
+        border: 1px solid #555;
+    }
+    </style>
+
+</head>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-custom transparent navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">
+                    <i class="fa fa-play-circle"></i>  <span class="light">Investi</span>Gator
+                </a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+                <ul class="nav navbar-nav">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#analysis">Analysis</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#about">About Us</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Intro Header -->
+    <header class="intro">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h1 class="brand-heading">InvestiGator</h1>
+                        <p class="intro-text">InvestiGator is a service that is used to track and understand human trafficking</p>
+                        <a href="#about" class="btn btn-circle page-scroll">
+                            <i class="fa fa-angle-double-down animated"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Analysis Section -->
+    <header class="analysis">
+    <section id="analysis" class="container content-section text-center">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <h2>Analysis</h2>
+                <div class="overall_links">
+                <p>
+                    <a href="http://localhost:5000/posts_hourly">Posts Hourly</a>
+                </p>
+                <p>
+                    <a href="http://localhost:5000/posts_monthly">Posts Monthly</a>
+                </p>
+                <p> 
+                    <a href="http://localhost:5000/unique_posts_hourly">Unique Posts Hourly</a>
+                </p>
+                <p>
+                    <a href="http://localhost:5000/unique_posts_monthly">Unique Posts Monthly</a>
+                </p>
+                <p>
+                    <a href="http://localhost:5000/map_visual">Geographic View of Total Cases</a>
+                </p>
+                </div>
+        </div>
+    </section>
+    </header>
+
+    <!-- About Section -->
+    <header class="about">
+    <section id="about" class="container content-section text-center">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2">
+                <h2>About Us</h2>
+                <p>InvestiGator is an open source tool used to understand human trafficking.</p>
+                <p>
+            </div>
+        </div>
+    </section>
+    </header>
+
+    <!-- Contact Section -->
+    <header class="contact">
+    <section id="contact" class="container content-section text-center">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Contact Us</h2>
+                <p>Feel free to contact us if you have additional information.</p>
+                <p class="message"></p>
+                <form action="http://www.findme/jsonpform2email.php">
+                <div class="form-group">
+                <label>Name</label>
+                <input class="form-control" type="text" name="from" placeholder="Enter name"></div>
+                <div class="form-group">
+                <label>Email</label>
+                <input class="form-control" type="text" name="from" placeholder="Enter email"></div>
+                <div class="form-group">
+                <label>Message</label>
+                <textarea class="form-control" name="message"></textarea>
+                </div>
+                <input type="submit" class="btn btn-default" name="submit" value="Send">
+                </form>
+            </div>
+        </div>
+    </section>
+    </header>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <!--<p>Copyright &copy; 2014</p>-->
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="{{url_for('static',filename='js/jquery.js') }}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="{{url_for('static', filename='js/jquery.easing.min.js' ) }}"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="{{ url_for('static', filename='js/grayscale.js')}}"></script>
+    <script src="{{url_for('static', filename='navbarcustom.js')}}"></script>
+
+    <script>
+  /* jsonp form to email function */
+  /* jsonp form to email function */
+  $('form').submit(function() {
+    var url = $(this).attr("action");
+    var params = $(this).serialize();
+    $.getJSON(url + '?' + params + "&callback=?", function(data) {
+      switch(data[0].status){
+        case 'success':
+        $('.message').addClass("text-success").html('Thank you, <strong>' + data[0].from + '</strong>,!');
+        $('form')[0].reset();
+        break;
+        case 'invalid email':
+        $('.message').removeClass("text-success").addClass("text-danger").html('Please provide a valid email address!');
+        break;
+        case 'failed to send':
+        $('.message').removeClass("text-success").addClass("text-danger").html('Failed to send email.');
+        break;
+      }
+    });
+    return false;
+  });
+</script>
+
+</body>
+

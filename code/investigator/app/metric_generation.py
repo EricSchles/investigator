@@ -36,6 +36,13 @@ def number_of_posts_in_adults_hour_over_hour():
     return hour_over_hour_frequencies
 
 #Month over Month analysis - corresponds to metrics of type 2 subtype 2 in lectures/scraping_the_web.md
+def overall_number_of_posts_in_adults_month_over_month():
+    list_of_ads = Backpage.query.all()
+    datetimes = [elem.timestamp for elem in list_of_ads]
+    frequencies = [elem.frequency for elem in list_of_ads]
+    month_over_month_frequencies = _prepare_for_month_over_month_timeseries(datetimes,frequencies)
+    return month_over_month_frequencies
+
 def _prepare_for_month_over_month_timeseries(datetimes,frequencies):
     year_months = []
     x_vals = []
@@ -50,10 +57,12 @@ def _prepare_for_month_over_month_timeseries(datetimes,frequencies):
             summation = 0
     return x_vals,y_vals
 
-def get_locations():
-    list_of_ads = BackpageAdInfo.query.all()
-    return [[ad.longitude,ad.latitude] for ad in list_of_ads if ad.latitude != 'no address information' and ad.longitude !='no address information' and ad.latitude and ad.longitude]
-    
+#Unique versions of the above metrics
+def overall_number_of_unique_posts_in_adults_month_over_month():
+    datetimes = get_unique_ads()
+    month_over_month_frequencies = _prepare_for_unique_month_over_month_timeseries(datetimes)
+    return month_over_month_frequencies
+
 def _prepare_for_unique_month_over_month_timeseries(datetimes):
     year_months = []
     x_vals = []
@@ -68,16 +77,21 @@ def _prepare_for_unique_month_over_month_timeseries(datetimes):
             summation = 0
     return x_vals,y_vals
 
-def overall_number_of_posts_in_adults_month_over_month():
-    list_of_ads = Backpage.query.all()
-    datetimes = [elem.timestamp for elem in list_of_ads]
-    month_over_month_frequencies = _prepare_for_unique_month_over_month_timeseries(datetimes)
-    return month_over_month_frequencies
-
 def unique_posts_per_hour_day_of_the_week():
     datetimes = get_unique_ads()
     hour_over_hour_frequencies = _prepare_for_unique_hour_over_hour_timeseries(datetimes)
     return hour_over_hour_frequencies
+
+def _prepare_for_unique_hour_over_hour_timeseries(datetimes):
+    day_hours = {}
+    for ind,time_obj in enumerate(datetimes):
+        day = time_obj.strftime("%A")
+        hour = time_obj.hour
+        if not (day,hour) in day_hours.keys():
+            day_hours[(day,hour)] = 1
+        else:
+            day_hours[(day,hour)] += 1 
+    return day_hours
 
 def get_unique_ads():
     seen_phone_numbers = []
@@ -95,23 +109,6 @@ def get_unique_ads():
                 unique_ads.append(ad)
                 seen_phone_numbers.append(parsed_number)
     return [elem.timestamp for elem in unique_ads if elem.timestamp]
-    
-def overall_number_of_unique_posts_in_adults_month_over_month():
-    datetimes = get_unique_ads()
-    month_over_month_frequencies = _prepare_for_unique_month_over_month_timeseries(datetimes)
-    return month_over_month_frequencies
-
-
-def _prepare_for_unique_hour_over_hour_timeseries(datetimes):
-    day_hours = {}
-    for ind,time_obj in enumerate(datetimes):
-        day = time_obj.strftime("%A")
-        hour = time_obj.hour
-        if not (day,hour) in day_hours.keys():
-            day_hours[(day,hour)] = 1
-        else:
-            day_hours[(day,hour)] += 1 
-    return day_hours
 
 def parse_number(phone_numbers):
     if phone_numbers == None:
@@ -121,3 +118,7 @@ def parse_number(phone_numbers):
         return phone_numbers.split(",")
     else:
         return phone_numbers
+
+def get_locations():
+    list_of_ads = BackpageAdInfo.query.all()
+    return [[ad.longitude,ad.latitude] for ad in list_of_ads if ad.latitude != 'no address information' and ad.longitude !='no address information' and ad.latitude and ad.longitude]
