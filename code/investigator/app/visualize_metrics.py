@@ -38,10 +38,15 @@ def plot_simple_timeseries(dates,frequencies,filename):
     },auto_open=False)
     shutil.move("temp-plot.html",filename)
 
+def visualize_unique_month_over_month():
+    months,frequencies = metric_generation.overall_number_of_unique_posts_in_adults_month_over_month()
+    plot_simple_timeseries(months,frequencies,"app/templates/unique_backpage_month_over_month_frequencies.html")
+
 def visualize_month_over_month():
     months,frequencies = metric_generation.overall_number_of_posts_in_adults_month_over_month()
     plot_simple_timeseries(months,frequencies,"app/templates/backpage_month_over_month_frequencies.html")
 
+    
 def order_day_hour(vals):
     dicter = OrderedDict({})
     dicter["Monday"] = []
@@ -75,5 +80,9 @@ def plot_simple_barchart(time_freq,filename):
     shutil.move("temp-plot.html",filename)
 
 def visualize_day_hour():
+    time_freq = metric_generation.number_of_posts_in_adults_hour_over_hour()
+    plot_simple_barchart(time_freq,"app/templates/backpage_day_hour.html")
+
+def visualize_unique_day_hour():
     time_freq = metric_generation.number_of_posts_in_adults_hour_over_hour()
     plot_simple_barchart(time_freq,"app/templates/backpage_day_hour.html")

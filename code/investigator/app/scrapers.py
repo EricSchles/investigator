@@ -39,8 +39,8 @@ def check_for_repeat_ads(titles,ads,place):
             new_ads.append(ads[ind])
             new_unique_titles.append(val)
     for ind,unique_title in enumerate(new_unique_titles):
-        phone_number, ad_body,location,latitude, longitude, post_id = scrape_ad(new_ads[ind],place)
-        ad_info = BackpageAdInfo(unique_title,phone_number,ad_body,location,latitude,longitude,'',post_id)#photo has not been handled yet
+        phone_number, ad_body,location,latitude, longitude, post_id,timestamp = scrape_ad(new_ads[ind],place)
+        ad_info = BackpageAdInfo(unique_title,phone_number,ad_body,location,latitude,longitude,'',post_id,timestamp)#photo has not been handled yet
         db.session.add(ad_info)
         db.session.commit()
     return new_ads    
@@ -84,4 +84,4 @@ def scrape_ad(url,place):
     location = clean_location_string(location)
     post_id = strip_post_id(post_id)
     latitude,longitude = get_lat_long(location,place)
-    return phone_number, ad_body,location,str(latitude),str(longitude),post_id
+    return phone_number, ad_body,location,str(latitude),str(longitude),post_id,datetime.now()

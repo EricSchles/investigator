@@ -91,10 +91,12 @@ def phone_number_parse(text):
 	        #country codes can be two,three digits
         if len(phone) == 10 and phone[0] != '1':
             possible_numbers.append(''.join(phone))
-            phone = phone[1:]
+            #phone = phone[1:]
+            phone = []
         if len(phone) == 11 and phone[0] == '1':
             possible_numbers.append(''.join(phone))
-            phone = phone[1:]
+            #phone = phone[1:]
+            phone = []
     if not any([len(elem) == 10 or len(elem) == 11 for elem in  possible_numbers]):
         possible_numbers += [''.join(total_number_array)]
     for number in possible_numbers:
