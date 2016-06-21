@@ -60,7 +60,10 @@ def scrape_backpage(url,place):
     
     while True:
         r = requests.get(url)
-        html = lxml.html.fromstring(r.text)
+        try:
+            html = lxml.html.fromstring(r.text)
+        except lxml.etree.ParserError:
+            html = lxml.html.fromstring(r.text.encode('utf-8','strict'))
         ads = html.xpath("//div[contains(@class, 'cat')]/a/@href")
         #handles ads we've already scraped once to avoid over counting
         titles = [elem.text_content() for elem in html.xpath("//div[contains(@class, 'cat')]/a")]
