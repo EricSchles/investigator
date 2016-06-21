@@ -4,4 +4,6 @@ Understanding how to relate craigslist and backpage in this context is our first
 
 Investigators have the opposite problem, as compared to the civicly minded developer - all the data and none of the resources.  By creating tools for such an investigator, we can implicitly aid in the search for human traffickers.  But more over, by understanding how to build for investigators, we don't run the legal, or personal risk of investigating dangerous criminals.  
 
+hello
+
 So to recap - our first metric comes from taking the proportion of web traffic from craigslist and backpage's adult section and comparing the two.  The resulting proportion will tell us the market segment interested in purchasing sex.  And we will define it as relative willingness to purchase commercial sex.
