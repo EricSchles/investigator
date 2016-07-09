@@ -1,7 +1,19 @@
-from app import text_parser,metric_generation
+from app import text_parser,metric_generation,tools
 from num2words import num2words
 from datetime import datetime
 import random
+
+"""
+Regarding these tests:
+
+It is worth noting that all phone_number_parse tests require a connection to the internet, as well as twilio credentials.  If you haven't added a twilio account, these tests will not work.
+
+"""
+
+#tests for tools
+def test_generate_connected_graph():
+    listing = ["a","b","c","d"]
+    assert {"a":["b","c","d"],"b":["c","d"],"c":["d"],"d":[]} == tools.generate_connected_graph(listing)
 
 #tests for text_parser
 def test_letter_to_number():

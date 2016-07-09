@@ -14,6 +14,7 @@ from app.models import Backpage,BackpageAdInfo
 from datetime import datetime
 import random
 from app.text_parser import phone_number_parse, get_lat_long,clean_location_string,strip_post_id
+from app.nlp_tools import *
 
 def check_for_repeat_ads(titles,ads,place):
     """
@@ -25,7 +26,7 @@ def check_for_repeat_ads(titles,ads,place):
     
     parameters:
     @titles - the titles is a list of strings, specifically the ad titles from the most recent scrape
-    @ads - the ads are the urls to individual ads
+    @ads - the ads are the urls to individual ads, they are unicode objects or strings.
 
     Notes - we uniquely identify on title and then pass back the urls that don't currently exist in our system.
     """

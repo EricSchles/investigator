@@ -15,6 +15,39 @@ overall_number_of_posts_in_adults_month_over_month
 """
 from app.models import Backpage,BackpageAdInfo
 from datetime import datetime
+from app.nlp_tools import phrase_frequency,document_similarity
+from app.tools import generate_connected_graph
+
+import time
+
+#text processing
+def overall_comparison():
+    total_ads = [elem.ad_body for elem in BackpageAdInfo.query.all()]
+    return phrase_frequency(total_ads)
+
+def average_phrase_similarity_between_documents_by_phone_number(number_of_grams=10):
+    ads = {}
+    for ad in BackpageAdInfo.query.all():
+        if ad.phone_number and (len(ad.phone_number) == 10 or len(ad.phone_number) == 11):
+            if ad.phone_number in ads:
+                ads[ad.phone_number] += "\n" + ad.ad_body
+            else:
+                ads[ad.phone_number] = ad.ad_body
+    checklist_of_nodes_to_process = generate_connected_graph([key for key in ads.keys()])
+    average_per_gram = {}.fromkeys([elem for elem in range(1,number_of_grams)],0)
+    total = 0
+    
+    for key in checklist_of_nodes_to_process:
+        print(len(checklist_of_nodes_to_process[key]),"total nodes to process")
+        start = time.time()
+        for list_item in checklist_of_nodes_to_process[key]:
+            similarity_scores = document_similarity(ads[key],ads[list_item])
+            total += 1
+            for i_gram in similarity_scores.keys():
+                average_per_gram[i_gram] += similarity_scores[i_gram]
+        print(time.time() - start)
+    average_per_gram = {key:average_per_gram[key]/total for key in average_per_gram.keys()}
+    return average_per_gram
 
 #Hour over Hour analysis - corresponds to metrics of type 2 subtype 1 in lectures/scraping_the_web.md
 def _prepare_for_hour_over_hour_timeseries(datetimes,frequencies):
