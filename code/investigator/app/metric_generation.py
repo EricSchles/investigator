@@ -25,7 +25,7 @@ def overall_comparison():
     total_ads = [elem.ad_body for elem in BackpageAdInfo.query.all()]
     return phrase_frequency(total_ads)
 
-def average_phrase_similarity_between_documents_by_phone_number(number_of_grams=10):
+def average_phrase_similarity_between_documents_by_phone_number(number_of_grams=10,profiling=False):
     ads = {}
     for ad in BackpageAdInfo.query.all():
         if ad.phone_number and (len(ad.phone_number) == 10 or len(ad.phone_number) == 11):
@@ -38,14 +38,15 @@ def average_phrase_similarity_between_documents_by_phone_number(number_of_grams=
     total = 0
     
     for key in checklist_of_nodes_to_process:
-        print(len(checklist_of_nodes_to_process[key]),"total nodes to process")
-        start = time.time()
+        if profiling:
+            print(len(checklist_of_nodes_to_process[key]),"total nodes to process")
+        if profiling: start = time.time()
         for list_item in checklist_of_nodes_to_process[key]:
             similarity_scores = document_similarity(ads[key],ads[list_item])
             total += 1
             for i_gram in similarity_scores.keys():
                 average_per_gram[i_gram] += similarity_scores[i_gram]
-        print(time.time() - start)
+        if profiling: print(time.time() - start)
     average_per_gram = {key:average_per_gram[key]/total for key in average_per_gram.keys()}
     return average_per_gram
 
