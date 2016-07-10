@@ -25,6 +25,20 @@ def overall_comparison():
     total_ads = [elem.ad_body for elem in BackpageAdInfo.query.all()]
     return phrase_frequency(total_ads)
 
+def phrase_frequency_categorized_by_phone_number():
+    ads = {}
+    for ad in BackpageAdInfo.query.all():
+        if ad.phone_number and (len(ad.phone_number) == 10 or len(ad.phone_number) == 11):
+            if ad.phone_number in ads:
+                ads[ad.phone_number] += "\n" + ad.ad_body
+            else:
+                ads[ad.phone_number] = ad.ad_body
+    
+    phrase_frequency_per_phone_number = {}
+    for ad in ads.keys():
+        phrase_frequency_per_phone_number[ad] = phrase_frequency(ads[ad])
+    return phrase_frequency_per_phone_number
+
 def average_phrase_similarity_between_documents_by_phone_number(number_of_grams=10,profiling=False):
     ads = {}
     for ad in BackpageAdInfo.query.all():
