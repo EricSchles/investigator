@@ -132,25 +132,51 @@ from app import views,models
 models.py:
 
 ```
+"""
+
+Here the models for our database is defined.
+
+I am using Postgres, Flask-SQLAlchemy for this application.
+
+For an introduction to Flask-SQLAlchemy check out: http://flask-sqlalchemy.pocoo.org/2.1/
+""" 
 from app import db
 
-class AdInfo(db.Model):
+class BackpageAdInfo(db.Model):
     __tablename__ = 'ad_info'
     id = db.Column(db.Integer, primary_key=True)
     ad_title = db.Column(db.String)
-
-    def __init__(self,ad_title):
+    phone_number = db.Column(db.String)
+    location = db.Column(db.String)
+    latitude = db.Column(db.String)
+    longitude = db.Column(db.String)
+    ad_body = db.Column(db.String)
+    photos = db.Column(db.String)
+    post_id = db.Column(db.String)
+    timestamp = db.Column(db.DateTime)
+    
+    def __init__(self,ad_title,phone_number,ad_body,location,latitude,longitude,photos,post_id,timestamp):
         self.ad_title = ad_title
-
+        self.phone_number = phone_number
+        self.location = location
+        self.latitude = latitude
+        self.longitude = longitude
+        self.ad_body = ad_body
+        self.photos = photos
+        self.post_id = post_id
+        self.timestamp = timestamp
+        
+        
 class Backpage(db.Model):
-	__tablename__ = 'backpage'
-	id = db.Column(db.Integer, primary_key=True)
-	timestamp = db.Column(db.DateTime)
-	frequency = db.Columb(db.Integer)
+    __tablename__ = 'backpage'
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime)
+    frequency = db.Column(db.Integer)
+    
+    def __init__(self,timestamp,frequency):
+        self.timestamp = timestamp
+        self.frequency = frequency
 
-	def __init__(self,timestamp,frequency):
-		self.timestamp = timestamp
-		self.frequency = frequency
 ```
 
 views.py:
@@ -168,12 +194,14 @@ import requests
 import lxml.html
 import time
 from app import db
-from app.models import Backpage,AdInfo
+from app.models import Backpage,BackpageAdInfo
 from datetime import datetime
 import random
+from app.text_parser import phone_number_parse, get_lat_long,clean_location_string,strip_post_id
+from app.nlp_tools import *
 
-def check_for_repeat_ads(titles,ads):
-    unique_titles = [elem.ad_title for elem in AdInfo.query.all()]
+def check_for_repeat_ads(titles,ads,place):
+    unique_titles = [elem.ad_title for elem in BackpageAdInfo.query.all()]
     new_ads = []
     new_unique_titles = []
     for ind,val in enumerate(titles):
@@ -182,26 +210,57 @@ def check_for_repeat_ads(titles,ads):
         else:
             new_ads.append(ads[ind])
             new_unique_titles.append(val)
-    for unique_title in new_unique_titles:
-        ad_info = AdInfo(unique_title)
+    for ind,unique_title in enumerate(new_unique_titles):
+        phone_number, ad_body,location,latitude, longitude, post_id,timestamp = scrape_ad(new_ads[ind],place)
+        ad_info = BackpageAdInfo(unique_title,phone_number,ad_body,location,latitude,longitude,'',post_id,timestamp)#photo has not been handled yet
         db.session.add(ad_info)
         db.session.commit()
-    return new_ads
-
-def scrape_backpage():
+    return new_ads    
+    
+def scrape_backpage(url,place):    
     while True:
-        r = requests.get("http://newyork.backpage.com/FemaleEscorts/")
-        html = lxml.html.fromstring(r.text)
+        r = requests.get(url)
+        try:
+            html = lxml.html.fromstring(r.text)
+        except lxml.etree.ParserError:
+            html = lxml.html.fromstring(r.text.encode('utf-8','strict'))
         ads = html.xpath("//div[contains(@class, 'cat')]/a/@href")
         #handles ads we've already scraped once to avoid over counting
         titles = [elem.text_content() for elem in html.xpath("//div[contains(@class, 'cat')]/a")]
-        ads = check_for_repeat_ads(titles,ads)
+        ads = check_for_repeat_ads(titles,ads,place)
         if len(ads) == 0:
             continue
         bp = Backpage(datetime.now(),len(ads))
         db.session.add(bp)
         db.session.commit()
         time.sleep(random.randint(2,700))
+
+def scrape_ad(url,place):
+    r = requests.get(url)
+    html = lxml.html.fromstring(r.text)
+    try:
+        ad_body = [elem.text_content().replace("\r","") for elem in html.xpath("//div[@class='postingBody']")][0]
+    except IndexError:
+        #this means we don't have an ad body and thus there will be little to no useful information here.
+        #and therefore we return only empty strings
+        return '','','','','','',''
+    extra_info = html.xpath("//div[@style='padding-left:2em;']")
+    try:
+        location = [elem.text_content() for elem in extra_info if "Location:" in elem.text_content()][0]
+        location = clean_location_string(location)
+        latitude,longitude = get_lat_long(location,place)
+    except IndexError:
+        location = ''
+    try:
+        post_id = [elem.text_content() for elem in extra_info if "Post ID:" in elem.text_content()][0]
+        post_id = strip_post_id(post_id)
+    except IndexError:
+        post_id = ''
+        
+    other_ads = [elem for elem in html.xpath("//a/@href") if "backpage" in elem]
+    phone_number = phone_number_parse(ad_body)
+
+    return phone_number, ad_body,location,str(latitude),str(longitude),post_id,datetime.now()
 
 ```
 
