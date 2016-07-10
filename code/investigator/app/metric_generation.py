@@ -15,7 +15,7 @@ overall_number_of_posts_in_adults_month_over_month
 """
 from app.models import Backpage,BackpageAdInfo
 from datetime import datetime
-from app.nlp_tools import phrase_frequency,document_similarity
+from app.nlp_tools import phrase_frequency,document_similarity,phrase_frequency_ads
 from app.tools import generate_connected_graph
 
 import time
@@ -33,10 +33,9 @@ def phrase_frequency_categorized_by_phone_number():
                 ads[ad.phone_number] += "\n" + ad.ad_body
             else:
                 ads[ad.phone_number] = ad.ad_body
-    
     phrase_frequency_per_phone_number = {}
     for ad in ads.keys():
-        phrase_frequency_per_phone_number[ad] = phrase_frequency(ads[ad])
+        phrase_frequency_per_phone_number[ad] = phrase_frequency_ads(ads[ad])
     return phrase_frequency_per_phone_number
 
 def average_phrase_similarity_between_documents_by_phone_number(number_of_grams=10,profiling=False):

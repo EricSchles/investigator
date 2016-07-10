@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 def ngrams(sentence,n):
     sentence = sentence.replace("\n"," ").replace("\r"," ")
     input_list = [elem for elem in sentence.split(" ") if elem != '']
@@ -34,6 +36,26 @@ def document_similarity(document_a,document_b,max_ngram_size=10):
         similarity_score_with_n_grams[index+1] = similarity_scores[index]
     return similarity_score_with_n_grams
 
+def phrase_frequency_ads(documents,max_ngram_size=10):
+    """
+    Here we compute phrase frequency over a set of documents.  This gives us the absolute frequency of how often a phrase was used,
+    as well as the relative frequency that the term was used compared to all other terms of the same gram size.
+
+    
+    """
+    ngrams_doc = [ngrams(documents,i) for i in range(1,max_ngram_size)]
+    ngrams_doc = [elem for elem in ngrams_doc if elem != []] 
+    similarity_scores = {}
+    [similarity_scores.update({}.fromkeys(phrases,{"absolute frequency":1,"relative frequency":1})) for phrases in ngrams_doc] 
+    for i_gram in range(0,len(ngrams_doc)):
+        for index,elem in enumerate(ngrams_doc[i_gram]):
+            if elem in ngrams_doc[i_gram][:index] or elem in ngrams_doc[i_gram][index+1:]:
+                similarity_scores[elem]["absolute frequency"] += 1            
+        similarity_scores[elem]["relative frequency"] = similarity_scores[elem]["absolute frequency"]/float(len(ngrams_doc[i_gram]))
+    similarity_scores = OrderedDict(similarity_scores)
+    return sorted(similarity_scores.items(), key=lambda x: x[1]["relative frequency"], reverse=True)[:10]
+
+ 
 def phrase_frequency(documents,max_ngram_size=10):
     """
     Here we compute phrase frequency over a set of documents.  This gives us the absolute frequency of how often a phrase was used,
@@ -42,14 +64,16 @@ def phrase_frequency(documents,max_ngram_size=10):
     
     """
     documents = "\n".join([document.lower() for document in documents])
-    ngrams_doc= [ngrams(document,i) for i in range(1,max_ngram_size)]
+    ngrams_doc= [ngrams(documents,i) for i in range(1,max_ngram_size)]
     
     similarity_scores = {}
-    [similarity_scores.update({}.fromkeys(phrases,1)) for phrases in ngrams_doc] 
+    [similarity_scores.update({}.fromkeys(phrases,{"absolute frequency":1,"relative frequency":1})) for phrases in ngrams_doc] 
     for i_gram in range(0,len(ngrams_doc)):
         for index,elem in enumerate(ngrams_doc[i_gram]):
             if elem in ngrams_doc[i_gram][:index] or elem in ngrams_doc[i_gram][index+1:]:
                 similarity_scores[elem]["absolute frequency"] += 1            
-        similarity_scores[elem]["relative frequency"] = similarity_scores[elem]["absolute frequency"]/float(len(ngrams_doc_a[i_gram]))
-    return similarity_scores
+        similarity_scores[elem]["relative frequency"] = similarity_scores[elem]["absolute frequency"]/float(len(ngrams_doc[i_gram]))
+    similarity_scores = OrderedDict(similarity_scores)
+    return sorted(similarity_scores.items(), key=lambda x: x[1]["relative frequency"], reverse=True)[:10]
+    
  

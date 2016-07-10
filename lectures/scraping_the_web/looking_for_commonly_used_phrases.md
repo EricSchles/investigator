@@ -57,18 +57,19 @@ Using this we'll look at the phrase frequency amongst a set of ads.  The idea is
 Here's how I check for that:
 
 from [nlp_tools.py](https://github.com/EricSchles/investigator/blob/master/code/investigator/app/nlp_tools.py)
+
 ```
 def phrase_frequency(documents,max_ngram_size=10):
     documents = "\n".join([document.lower() for document in documents])
-    ngrams_doc= [ngrams(document,i) for i in range(1,max_ngram_size)]
+    ngrams_doc= [ngrams(documents,i) for i in range(1,max_ngram_size)]
     
     similarity_scores = {}
-    [similarity_scores.update({}.fromkeys(phrases,1)) for phrases in ngrams_doc] 
+    [similarity_scores.update({}.fromkeys(phrases,{"absolute frequency":1,"relative frequency":1})) for phrases in ngrams_doc] 
     for i_gram in range(0,len(ngrams_doc)):
         for index,elem in enumerate(ngrams_doc[i_gram]):
             if elem in ngrams_doc[i_gram][:index] or elem in ngrams_doc[i_gram][index+1:]:
                 similarity_scores[elem]["absolute frequency"] += 1            
-        similarity_scores[elem]["relative frequency"] = similarity_scores[elem]["absolute frequency"]/float(len(ngrams_doc_a[i_gram]))
+        similarity_scores[elem]["relative frequency"] = similarity_scores[elem]["absolute frequency"]/float(len(ngrams_doc[i_gram]))
     return similarity_scores
 ```
 
@@ -159,5 +160,4 @@ From here we see can get an approximate sense of how much people are using diffe
 Let's see our methods in action to get insight about how much posters use the same kinds of terminology:
 
 This data was collected over the course of a month and scraping for around 10 hours in total.  
-
 
