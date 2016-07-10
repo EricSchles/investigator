@@ -25,3 +25,5 @@ This tutorial represents an explanation of the domain knowledge and technical to
 [Getting hard attributes from a backpage ad](getting_hard_attributes_from_a_backpage_ad.md)
 
 [Making use of hard attributes](making_use_of_hard_attributes.md)
+
+[Looking for commonly used phrases](looking_for_commonly_used_phrases.md)

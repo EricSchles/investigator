@@ -1,4 +1,5 @@
 def ngrams(sentence,n):
+    sentence = sentence.replace("\n"," ").replace("\r"," ")
     input_list = [elem for elem in sentence.split(" ") if elem != '']
     return list(zip(*[input_list[i:] for i in range(n)]))
 
