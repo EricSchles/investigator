@@ -1,7 +1,0 @@
-def visualize_month_over_month():
-    months,frequencies = metric_generation.overall_number_of_posts_in_adults_month_over_month()
-    plot_simple_timeseries(months,frequencies,"app/templates/backpage_month_over_month_frequencies.html")
-
-    def visualize_day_hour():
-    time_freq = metric_generation.number_of_posts_in_adults_hour_over_hour()
-    plot_simple_barchart(time_freq,"app/templates/backpage_day_hour.html")
