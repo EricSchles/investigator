@@ -5,5 +5,5 @@ This document represents the high level features that this tool supports
 * video processing
 * predictive analytics
 * well defined set of metrics
-* infrastructure
+* [infrastructure](infrastructure.md)
 * joining of open and closed data to create dossier for specific trafficking cases
