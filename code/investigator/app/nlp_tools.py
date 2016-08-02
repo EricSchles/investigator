@@ -1,4 +1,6 @@
 from collections import OrderedDict
+import textacy
+import spacy
 
 def ngrams(sentence,n):
     sentence = sentence.replace("\n"," ").replace("\r"," ")
@@ -54,7 +56,6 @@ def phrase_frequency_ads(documents,max_ngram_size=10):
         similarity_scores[elem]["relative frequency"] = similarity_scores[elem]["absolute frequency"]/float(len(ngrams_doc[i_gram]))
     similarity_scores = OrderedDict(similarity_scores)
     return sorted(similarity_scores.items(), key=lambda x: x[1]["relative frequency"], reverse=True)[:10]
-
  
 def phrase_frequency(documents,max_ngram_size=10):
     """
@@ -76,4 +77,8 @@ def phrase_frequency(documents,max_ngram_size=10):
     similarity_scores = OrderedDict(similarity_scores)
     return sorted(similarity_scores.items(), key=lambda x: x[1]["relative frequency"], reverse=True)[:10]
     
- 
+def emotional_valence(document):
+    nlp = spacy.load("en")
+    doc = nlp(document)
+    return textacy.lexicon_methods.emotional_valence(doc,dm_data_dir="~/Documents/DepecheMood_V1.0")
+
