@@ -80,7 +80,7 @@ def phrase_frequency(documents,max_ngram_size=10):
 def emotional_valence(document):
     nlp = spacy.load("en")
     doc = nlp(document)
-    return textacy.lexicon_methods.emotional_valence(doc,dm_data_dir="~/Documents/DepecheMood_V1.0")
+    return textacy.lexicon_methods.emotional_valence(doc)
 
 if __name__ == '__main__':
     emotional_valence("hello there my friends")
