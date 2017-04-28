@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<p>Area Codes found in ads:</p>
+{% for area_code in area_codes.keys() %}
+	<p>{{area_code}}, found {{area_codes[area_code]}} times</p>
+{% endfor %}
+
+</body>
+</html>

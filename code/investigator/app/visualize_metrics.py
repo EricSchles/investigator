@@ -19,7 +19,6 @@ from datetime import datetime
 import numpy as np
 from statsmodels.api import formula 
 import plotly
-from plotly.graph_objs import Bar,Layout
 import scipy as sp
 from scipy.stats import describe
 import code

@@ -1,5 +1,5 @@
 from collections import OrderedDict
-import textacy
+#import textacy
 import spacy
 
 def ngrams(sentence,n):

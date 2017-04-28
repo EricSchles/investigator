@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<p>Phone numbers found in ads:</p>
+{% for phone_number in phone_numbers.keys() %}
+	<p>{{phone_number}}, found {{phone_numbers[phone_number]}} times</p>
+{% endfor %}
+</body>
+</html>

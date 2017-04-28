@@ -15,6 +15,28 @@ def number_of_posts_in_adults_hour_over_hour():
     visualize_day_hour()
     return render_template("backpage_day_hour.html")
 
+@app.route("/area_code_analysis",methods=["GET"])
+def area_code_analysis():
+    phone_numbers = [elem.phone_number for elem in BackpageAdInfo.query.all()]
+    area_codes = {}
+    for number in phone_numbers:
+        area_code = number[:3]
+        if "{" in area_code:
+            area_code = number[1:4]
+        if area_code not in list(area_codes.keys()):
+            area_codes[area_code] = 1
+        else:
+            area_codes[area_code] += 1
+    return render_template("area_code_analysis.html",area_codes=area_codes)
+
+@app.route("/list_phone_numbers",methods=["GET"])
+def list_phone_numbers():
+    phone_numbers = list(set([elem.phone_number for elem in BackpageAdInfo.query.all()]))
+    numbers = {}
+    for phone_number in phone_numbers:
+        numbers[phone_number] = len(BackpageAdInfo.query.filter_by(phone_number=phone_number).all())
+    return render_template("list_phone_numbers.html",phone_numbers=numbers)
+
 @app.route("/posts_monthly",methods=["GET"])
 def overall_number_of_posts_in_adults_month_over_month():
     visualize_month_over_month()

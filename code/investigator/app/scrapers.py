@@ -30,7 +30,10 @@ def check_for_repeat_ads(titles,ads,place):
 
     Notes - we uniquely identify on title and then pass back the urls that don't currently exist in our system.
     """
-    unique_titles = [elem.ad_title for elem in BackpageAdInfo.query.all()]
+    if BackpageAdInfo.query.all() != []:
+        unique_titles = set([elem.ad_title for elem in BackpageAdInfo.query.all()])
+    else:
+        unique_titles = []
     new_ads = []
     new_unique_titles = []
     for ind,val in enumerate(titles):
@@ -45,7 +48,10 @@ def check_for_repeat_ads(titles,ads,place):
         db.session.add(ad_info)
         db.session.commit()
     return new_ads    
-    
+
+def clean_string(string):
+    return string.strip().encode("ascii","ignore")
+
 def scrape_backpage(url,place):
     """
     This method scrapes backpages female escort service. it is documented in some detail in lectures/technical_steps_for_second_backpage_crawler.md
@@ -62,7 +68,7 @@ def scrape_backpage(url,place):
     while True:
         r = requests.get(url)
         try:
-            html = lxml.html.fromstring(r.text)
+            html = lxml.html.fromstring(clean_string(r.text))
         except lxml.etree.ParserError:
             html = lxml.html.fromstring(r.text.encode('utf-8','strict'))
         ads = html.xpath("//div[contains(@class, 'cat')]/a/@href")
@@ -78,7 +84,7 @@ def scrape_backpage(url,place):
 
 def scrape_ad(url,place):
     r = requests.get(url)
-    html = lxml.html.fromstring(r.text)
+    html = lxml.html.fromstring(clean_string(r.text))
     try:
         ad_body = [elem.text_content().replace("\r","") for elem in html.xpath("//div[@class='postingBody']")][0]
     except IndexError:
@@ -90,8 +96,8 @@ def scrape_ad(url,place):
         location = [elem.text_content() for elem in extra_info if "Location:" in elem.text_content()][0]
         location = clean_location_string(location)
         latitude,longitude = get_lat_long(location,place)
-    except IndexError:
-        location = ''
+    except:
+        latitude,longitude = '',''
     try:
         post_id = [elem.text_content() for elem in extra_info if "Post ID:" in elem.text_content()][0]
         post_id = strip_post_id(post_id)

@@ -1,5 +1,5 @@
 from flask import Flask
-from flask.ext.script import Manager
+from flask_script import Manager
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.migrate import Migrate, MigrateCommand
 

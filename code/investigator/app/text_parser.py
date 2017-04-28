@@ -26,6 +26,7 @@ import json
 #for address parsing
 import usaddress
 from geopy.geocoders import Nominatim, GoogleV3
+from twilio.rest import Client
 
 def letter_to_number(text):
     """
@@ -56,11 +57,12 @@ def verify_phone_number(number):
     @number - a string representation of a set of digits
     """
     data = pickle.load(open("twilio.creds","rb"))
-    r = requests.get("http://lookups.twilio.com/v1/PhoneNumbers/"+number,auth=data)
-    if "status_code" in json.loads(r.content.decode("ascii")).keys():
-        return False
-    else:
+    client = Client(data["ACCOUNT_SID"],data["AUTH_TOKEN"])
+    try:
+        number = client.lookups.phone_numbers(number).fetch(type="carrier")
         return True
+    except:
+        return False
 
 def phone_number_parse(text):
     """
@@ -138,7 +140,10 @@ def address_is_complete(text):
     if streetname_exists and streetnumber_exists:
         return "complete"
     elif num_streets > 1 and not streetnumber_exists:
-        return "cross street"
+        if len(get_streetnames(text)) <= 2:
+            return "cross street"
+        else:
+            return "no address information"
     else:
         return "no address information"
 
@@ -146,6 +151,11 @@ def get_streetnames(text):
     streetnames = []
     parsed_text = usaddress.parse(text)
     for ind,word in enumerate(parsed_text):
+        if word[1] == "AddressNumber":
+            if ind+1 < len(parsed_text):
+                if "rd" in word[0].lower() or "st" in word[0].lower() or "road" in word[0].lower() or "street" in word[0].lower():
+                    if parsed_text[ind+1][1] =="StreetName":
+                        streetnames.append(word[0] + " " + parsed_text[ind+1][0])
         if word[1] == "StreetName":
             if word[0] not in ["and","or","near","between"]:
                 if ind+1 < len(parsed_text):
