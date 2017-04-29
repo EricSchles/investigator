@@ -1,6 +1,6 @@
 from collections import OrderedDict
 #import textacy
-import spacy
+#import spacy
 
 def ngrams(sentence,n):
     sentence = sentence.replace("\n"," ").replace("\r"," ")
@@ -77,10 +77,10 @@ def phrase_frequency(documents,max_ngram_size=10):
     similarity_scores = OrderedDict(similarity_scores)
     return sorted(similarity_scores.items(), key=lambda x: x[1]["relative frequency"], reverse=True)[:10]
     
-def emotional_valence(document):
-    nlp = spacy.load("en")
-    doc = nlp(document)
-    return textacy.lexicon_methods.emotional_valence(doc)
+# def emotional_valence(document):
+#     nlp = spacy.load("en")
+#     doc = nlp(document)
+#     return textacy.lexicon_methods.emotional_valence(doc)
 
-if __name__ == '__main__':
-    emotional_valence("hello there my friends")
+# if __name__ == '__main__':
+#     emotional_valence("hello there my friends")
