@@ -83,7 +83,7 @@ def scrape_backpage(url,place):
         bp = Backpage(datetime.now(),len(ads))
         db.session.add(bp)
         db.session.commit()
-        time.sleep(random.randint(2,700))
+        time.sleep(random.randint(2,7))
 
 def scrape_ad(url,place):
     r = requests.get(url)
