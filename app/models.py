@@ -7,7 +7,7 @@ I am using Postgres, Flask-SQLAlchemy for this application.
 For an introduction to Flask-SQLAlchemy check out: http://flask-sqlalchemy.pocoo.org/2.1/
 """ 
 from app import db
-
+    
 class BackpageAdInfo(db.Model):
     """
     This model gives us a set of specific information from each add scraped from backpage.
