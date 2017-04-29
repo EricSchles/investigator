@@ -109,25 +109,25 @@
                 <h2>Analysis</h2>
                 <div class="overall_links">
                 <p>
-                    <a href="http://localhost:5000/posts_hourly">Posts Hourly</a>
+                    <a href="{{ url_for('posts_hourly') }}">Posts Hourly</a>
                 </p>
                 <p>
-                    <a href="http://localhost:5000/posts_monthly">Posts Monthly</a>
+                    <a href="{{ url_for('posts_monthly') }}">Posts Monthly</a>
                 </p>
                 <p> 
-                    <a href="http://localhost:5000/unique_posts_hourly">Unique Posts Hourly</a>
+                    <a href="{{ url_for('unique_posts_hourly') }}">Unique Posts Hourly</a>
                 </p>
                 <p>
-                    <a href="http://localhost:5000/unique_posts_monthly">Unique Posts Monthly</a>
+                    <a href="{{ url_for('unique_posts_monthly') }}">Unique Posts Monthly</a>
                 </p>
                 <p>
-                    <a href="http://localhost:5000/map_visual">Geographic View of Total Cases</a>
+                    <a href="{{ url_for('map_visual') }}">Geographic View of Total Cases</a>
                 </p>
                 <p>
-                    <a href="http://localhost:5000/list_phone_numbers">Frequency Analysis of Phone Numbers</a>
+                    <a href="{{ url_for('list_phone_numbers') }}">Frequency Analysis of Phone Numbers</a>
                 </p>
                 <p>
-                    <a href="http://localhost:5000/area_code_analysis">Frequency Analysis of Area Codes</a>
+                    <a href="{{ url_for('area_code_analysis') }}">Frequency Analysis of Area Codes</a>
                 </p>
                 </div>
         </div>
