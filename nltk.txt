@@ -60,7 +60,7 @@ semcor
 senseval
 sentence_polarity
 sentiwordnet
-shaespeare
+shakespeare
 sinica_treebank
 smultron
 state_union
