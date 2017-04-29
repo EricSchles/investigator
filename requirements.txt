@@ -10,7 +10,6 @@ Flask-SQLAlchemy
 Jinja2
 lxml
 matplotlib
-nltk
 nose
 num2words
 pandas
