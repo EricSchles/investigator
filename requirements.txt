@@ -16,7 +16,6 @@ pandas
 patsy
 pbr
 plotly
-ply
 psycopg2
 requests
 SQLAlchemy
