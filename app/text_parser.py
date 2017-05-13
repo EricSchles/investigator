@@ -57,11 +57,14 @@ def verify_phone_number(number):
     parameters:
     @number - a string representation of a set of digits
     """
-    #data = pickle.load(open("twilio.creds","rb"))
-    data = {
-        "ACCOUNT_SID":os.getenv("ACCOUNT_SID"),
-        "AUTH_TOKEN":os.getenv("AUTH_TOKEN")
-    }
+    #for locally:
+    data = pickle.load(open("twilio.creds","rb"))
+    #for the server:
+    # data = {
+    #     "ACCOUNT_SID":os.getenv("ACCOUNT_SID"),
+    #     "AUTH_TOKEN":os.getenv("AUTH_TOKEN")
+    # }
+    
     client = Client(data["ACCOUNT_SID"],data["AUTH_TOKEN"])
     try:
         number = client.lookups.phone_numbers(number).fetch(type="carrier")
@@ -178,8 +181,10 @@ def get_lat_long(text,place):
         nominatim_encoder = Nominatim()
         location = nominatim_encoder.geocode(formatted_text)
     except:
-        #google_api_key = pickle.load(open("google_geocoder_api.creds","rb"))
-        google_api_key = os.getenv("GOOGLE_GEOCODER_API")
+        #for local:
+        google_api_key = pickle.load(open("google_geocoder_api.creds","rb"))
+        #for server:
+        #google_api_key = os.getenv("GOOGLE_GEOCODER_API")
         google_encoder = GoogleV3(google_api_key)
         parsed_text = address_is_complete(text)
         if parsed_text == "complete":

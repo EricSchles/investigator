@@ -15,6 +15,8 @@ def api_coordinates_all():
     return jsonify({"all_coordinates":[(elem.latitude,elem.longitude) for elem in BackpageAdInfo.query.all()]})
 
 @app.route("/api/location/all")
+def api_location_all():
+    return jsonify({"all_locations":[(elem.city,elem.state) for elem in BackpageAdInfo.query.all()]})
 
 @app.route("/",methods=["GET","POST"])
 def index():
