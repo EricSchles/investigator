@@ -1,31 +1,22 @@
 # Reference: https://github.com/gboeing/urban-data-science/blob/master/19-Spatial-Analysis-and-Cartography/rtree-spatial-indexing.ipynb
 # Reference: http://geoffboeing.com/2016/10/r-tree-spatial-index-python/
-
-import geopandas as gpd
-from shapely.geometry import Point, Polygon, MultiPolygon
-import osmnx as ox
-
-def contains(x_list,y_list):
+        
+def contains(latitude_bounds,longitude_bounds,point_to_check):
     """
-    This method passes in all the points from the database and then checks for 
+    This method passes in all the points from the database and then checks for containment in an area.
+    @latitude_bounds - the latitudes of the bounding box
+    @longitude - the longitudes of the bounding box
+    @point_to_check - the point to check.  
+
+    This function answers the question, is the point_to_check inside the polygon we pass in?
     """
     #our bounding box defined here...
-    gdf = ox.gdf_from_place('Walnut Creek, California, USA')
-    gdf_nodes = gpd.GeoDataFrame(data={'x':x_list, 'y':y_list})
-    gdf_nodes.crs = gdf.crs
-    gdf_nodes.name = 'nodes'
-    gdf_nodes['geometry'] = gdf_nodes.apply(lambda row: Point((row['x'], row['y'])), axis=1)
+    max_lat, min_lat = max(latitude_bounds), min(latitude_bounds)
+    max_long, min_long = max(longitude_bounds), min(longitude_bounds)
 
-    # make the geometry a multipolygon if it's not already
-    geometry = gdf['geometry'].iloc[0]
-    if isinstance(geometry, Polygon):
-        geometry = MultiPolygon([geometry])
+    if point_to_check[0] < max_lat and point_to_check[0] > min_lat:
+        if point_to_check[1] < max_long and point_to_check[1] > min_long:
+            return True
+    return False
 
-    import code
-    code.interact(local=locals())
 
-    sindex = gdf_nodes.sindex
-    possible_matches_index = list(sindex.intersection(geometry.bounds))
-    possible_matches = gdf_nodes.iloc[possible_matches_index]
-    return possible_matches[possible_matches.intersects(geometry)]
-    

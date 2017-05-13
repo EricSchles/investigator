@@ -1,4 +1,5 @@
 from app import text_parser,metric_generation,tools
+from app.geographic_processing import contains
 from num2words import num2words
 from datetime import datetime
 import random
@@ -9,6 +10,16 @@ Regarding these tests:
 It is worth noting that all phone_number_parse tests require a connection to the internet, as well as twilio credentials.  If you haven't added a twilio account, these tests will not work.
 
 """
+
+def test_contains():
+    point_to_check = (40.77264, -73.7471156)
+    box = [(40.775329,-73.753134),
+           (40.777100, -73.746568),
+           (40.768537, -73.741225),
+           (40.767740,-73.751504)]
+
+    assert contains(xs,ys,point_to_check) == True
+
 
 #tests for tools
 def test_generate_connected_graph():
