@@ -13,3 +13,5 @@ API all methods:
 * `/api/location/[US city],[US state]`: gets all the information regarding a specific city
 
 * `/api/coordinates/[latitude],[longitude]`: gets all the information regarding a specific latitude,longitude pair
+
+* `/api/coordinates/bounding_box/(lat_long),(lat_long),(lat_long),(lat_long)`: gets all the information regarding all latitude,longitude within the bounding box

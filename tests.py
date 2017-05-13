@@ -20,7 +20,6 @@ def test_contains():
 
     assert contains(xs,ys,point_to_check) == True
 
-
 #tests for tools
 def test_generate_connected_graph():
     listing = ["a","b","c","d"]

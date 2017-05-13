@@ -4,6 +4,7 @@ from flask import render_template, request, jsonify
 from app.models import * #todo - import specific objects
 from app.metric_generation import * #todo - import specific objects
 from app.visualize_metrics import * #todo - import specific objects
+from app.geographic_processing import contains
 import json
 
 def to_dict(elem):
@@ -11,7 +12,18 @@ def to_dict(elem):
     del dicter["_sa_instance_state"]
     dicter["timestamp"] = str(dicter["timestamp"])
     return dicter
-                              
+
+def process_coordinate(elem):
+    return elem.rstrip(")").lstrip("(").split("_")
+    
+@app.route("/api/coordinates/bounding_box/<query>")
+def api_coordinates_bounding_box(query):
+    box = [process_coordinate(elem) for elem in query.split(",")]
+    lat_box = [elem[0] for elem in box]
+    long_box = [elem[1] for elem in box]
+    return jsonify({"query_result":[to_dict(elem) for elem in BackpageAdInfo.query.all() if contains(lat_box,long_box,(elem.latitude, elem.longitude))]})
+    
+
 @app.route("/api/phone_number/<query>")
 def api_phone_number_query(query):
     return jsonify({"query_result":[to_dict(elem) for elem in BackpageAdInfo.query.filter_by(phone_number=query).all()]})
