@@ -43,11 +43,11 @@ def check_for_repeat_ads(url, titles,ads,city,state):
             new_ads.append(ads[ind])
             new_unique_titles.append(val)
     for ind,unique_title in enumerate(new_unique_titles):
-        phone_number, ad_body,location,latitude, longitude, post_id,timestamp = scrape_ad(new_ads[ind],city)
+        phone_number, ad_body,location,latitude, longitude, post_id,timestamp,photo_urls = scrape_ad(new_ads[ind],city)
         if isinstance(timestamp,str):
             continue
         else:
-            ad_info = BackpageAdInfo(url, unique_title,phone_number,ad_body,location,latitude,longitude,'',post_id,timestamp,city,state)#photo has not been handled yet
+            ad_info = BackpageAdInfo(url,unique_title,phone_number,ad_body,location,latitude,longitude,photo_urls,post_id,timestamp,city,state)
             db.session.add(ad_info)
             db.session.commit()
     return new_ads    
@@ -106,8 +106,10 @@ def scrape_ad(url,city):
         post_id = strip_post_id(post_id)
     except IndexError:
         post_id = ''
-        
+    try:
+        photo_urls = html.xpath("//ul[@id='viewAdPhotoLayout']//img/@src")
+    except:
+        photo_urls = ''
     other_ads = [elem for elem in html.xpath("//a/@href") if "backpage" in elem]
     phone_number = phone_number_parse(ad_body)
-
-    return phone_number, ad_body,location,str(latitude),str(longitude),post_id,datetime.now()
+    return phone_number, ad_body,location,str(latitude),str(longitude),post_id,datetime.now(), photo_urls
