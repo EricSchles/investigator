@@ -16,7 +16,7 @@ import random
 from app.text_parser import phone_number_parse, get_lat_long,clean_location_string,strip_post_id
 from app.nlp_tools import *
 
-def check_for_repeat_ads(titles,ads,city,state):
+def check_for_repeat_ads(url, titles,ads,city,state):
     """
     This method checks for repeat ads.  The problem is ads update in a unpredictable fashion, therefore you don't want to store ads
     that you've already scraped.  This method checks the ad's already scraped and compares titles.  If the titles are different,
@@ -47,7 +47,7 @@ def check_for_repeat_ads(titles,ads,city,state):
         if isinstance(timestamp,str):
             continue
         else:
-            ad_info = BackpageAdInfo(unique_title,phone_number,ad_body,location,latitude,longitude,'',post_id,timestamp,city,state)#photo has not been handled yet
+            ad_info = BackpageAdInfo(url, unique_title,phone_number,ad_body,location,latitude,longitude,'',post_id,timestamp,city,state)#photo has not been handled yet
             db.session.add(ad_info)
             db.session.commit()
     return new_ads    
@@ -55,7 +55,7 @@ def check_for_repeat_ads(titles,ads,city,state):
 def clean_string(string):
     return string.strip().encode("ascii","ignore")
 
-def scrape_backpage(url,city,state):
+def scrape_backpage(url, city, state):
     """
     This method scrapes backpages female escort service. it is documented in some detail in lectures/technical_steps_for_second_backpage_crawler.md
     but just to clarify what's going on - we are simply going to the most recent ads on backpage and continuously scraping the ads new content.
@@ -77,13 +77,13 @@ def scrape_backpage(url,city,state):
         ads = html.xpath("//div[contains(@class, 'cat')]/a/@href")
         #handles ads we've already scraped once to avoid over counting
         titles = [elem.text_content() for elem in html.xpath("//div[contains(@class, 'cat')]/a")]
-        ads = check_for_repeat_ads(titles,ads,city,state)
+        ads = check_for_repeat_ads(url, titles, ads, city, state)
         if len(ads) == 0:
             continue
         bp = Backpage(datetime.now(),len(ads))
         db.session.add(bp)
         db.session.commit()
-        time.sleep(random.randint(2,7))
+        time.sleep(random.randint(2, 7))
 
 def scrape_ad(url,city):
     r = requests.get(url)

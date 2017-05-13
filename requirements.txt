@@ -23,3 +23,5 @@ requests
 SQLAlchemy
 Werkzeug
 twilio
+geopandas
+shapely

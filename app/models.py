@@ -49,6 +49,7 @@ class BackpageAdInfo(db.Model):
     @photos - a filepath link to the set of pictures downloaded for the ad
     @post_id - an id for each backpage post from backpage
     @timestamp - when the ad was scraped
+    @url - the url of the scraped ad
     """
     __tablename__ = 'ad_info'
     id = db.Column(db.Integer, primary_key=True)
@@ -63,8 +64,10 @@ class BackpageAdInfo(db.Model):
     timestamp = db.Column(db.DateTime)
     city = db.Column(db.String)
     state = db.Column(db.String)
+    url = db.Column(db.String)
     
-    def __init__(self,ad_title,phone_number,ad_body,location,latitude,longitude,photos,post_id,timestamp,city,state):
+    def __init__(self,url,ad_title,phone_number,ad_body,location,latitude,longitude,photos,post_id,timestamp,city,state):
+        self.url = url
         self.ad_title = ad_title
         self.phone_number = phone_number
         self.location = location
