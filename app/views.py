@@ -6,6 +6,26 @@ from app.metric_generation import * #todo - import specific objects
 from app.visualize_metrics import * #todo - import specific objects
 import json
 
+def to_dict(elem):
+    dicter = elem.__dict__
+    del dicter["_sa_instance_state"]
+    dicter["timestamp"] = str(dicter["timestamp"])
+    return dicter
+                              
+@app.route("/api/phone_number/<query>")
+def api_phone_number_query(query):
+    return jsonify({"query_result":[to_dict(elem) for elem in BackpageAdInfo.query.filter_by(phone_number=query).all()]})
+
+@app.route("/api/location/<query>")
+def api_location_query(query):
+    city,state = query.split(",")
+    return jsonify({"query_result":[to_dict(elem) for elem in BackpageAdInfo.query.filter_by(state=state).all() if elem.city == city]})
+
+@app.route("/api/coordinates/<query>")
+def api_coordinates_query(query):
+    latitude,longitude = query.split(",")
+    return jsonify({"query_result":[to_dict(elem) for elem in BackpageAdInfo.query.filter_by(latitude=latitude).all() if elem.longitude == longitude]})
+
 @app.route("/api/phone_number/all")
 def api_phone_number_all():
     return jsonify({"all_phone_numbers":[elem.phone_number for elem in BackpageAdInfo.query.all()]})
