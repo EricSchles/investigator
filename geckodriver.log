@@ -1,0 +1,36 @@
+1493554155294	geckodriver	INFO	Listening on 127.0.0.1:53950
+1493554398216	geckodriver	INFO	Listening on 127.0.0.1:55041
+1493554399297	geckodriver::marionette	INFO	Starting browser /Applications/Firefox.app/Contents/MacOS/firefox-bin with args ["-marionette"]
+1493554401439	Marionette	INFO	Listening on port 55054
+1493554401541	Marionette	WARN	TLS certificate errors will be ignored for this session
+2017-04-30 08:13:21.973 plugin-container[34667:2292808] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x8e3f, name = 'com.apple.tsm.portname'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+2017-04-30 08:13:21.974 plugin-container[34667:2292808] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x8f47, name = 'com.apple.CFPasteboardClient'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+2017-04-30 08:13:21.974 plugin-container[34667:2292808] void __CFPasteboardSetup() : Failed to allocate communication port for com.apple.CFPasteboardClient; this is likely due to sandbox restrictions
+1493554427973	geckodriver	INFO	Listening on 127.0.0.1:55228
+1493554429058	geckodriver::marionette	INFO	Starting browser /Applications/Firefox.app/Contents/MacOS/firefox-bin with args ["-marionette"]
+1493554431231	Marionette	INFO	Listening on port 55241
+1493554431316	Marionette	WARN	TLS certificate errors will be ignored for this session
+2017-04-30 08:13:51.793 plugin-container[34787:2293449] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x8f3f, name = 'com.apple.tsm.portname'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+2017-04-30 08:13:51.794 plugin-container[34787:2293449] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x5223, name = 'com.apple.CFPasteboardClient'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+2017-04-30 08:13:51.794 plugin-container[34787:2293449] void __CFPasteboardSetup() : Failed to allocate communication port for com.apple.CFPasteboardClient; this is likely due to sandbox restrictions
+JavaScript error: https://imasdk.googleapis.com/js/sdkloader/loader.js, line 40: TypeError: window.parent is null
+*************************
+A coding exception was thrown and uncaught in a Task.
+
+Full message: TypeError: NetworkError when attempting to fetch resource.
+Full stack: 
+*************************
+*************************
+A coding exception was thrown and uncaught in a Task.
+
+Full message: TypeError: NetworkError when attempting to fetch resource.
+Full stack: 
+*************************
+IPDL protocol error: Handler returned error code!
+
+###!!! [Parent][DispatchAsyncMessage] Error: PLayerTransaction::Msg_ReleaseLayer Processing error: message was deserialized, but the handler returned false (indicating failure)
+

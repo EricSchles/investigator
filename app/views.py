@@ -1,10 +1,20 @@
 from app import app
 from app import db
-from flask import render_template,request
-from app.models import *
-from app.metric_generation import *
-from app.visualize_metrics import *
+from flask import render_template, request, jsonify
+from app.models import * #todo - import specific objects
+from app.metric_generation import * #todo - import specific objects
+from app.visualize_metrics import * #todo - import specific objects
 import json
+
+@app.route("/api/phone_number/all")
+def api_phone_number_all():
+    return jsonify({"all_phone_numbers":[elem.phone_number for elem in BackpageAdInfo.query.all()]})
+
+@app.route("/api/coordinates/all")
+def api_coordinates_all():
+    return jsonify({"all_coordinates":[(elem.latitude,elem.longitude) for elem in BackpageAdInfo.query.all()]})
+
+@app.route("/api/location/all")
 
 @app.route("/",methods=["GET","POST"])
 def index():

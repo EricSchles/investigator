@@ -8,6 +8,30 @@ For an introduction to Flask-SQLAlchemy check out: http://flask-sqlalchemy.pocoo
 """ 
 from app import db
     
+class AreaCodeLookup(db.Model):
+    """
+    This model provides a look up for phone number area codes and aids in converting them to latitude, longitude.
+    Specifically this mapping provides:
+    Area code and it's corresponding township.
+    From there geopy provides the lookup to latitude, longitude
+    
+    Because location may not be unique - there could be multiple towns with the same name, 
+    there is not a 100% guarantee all lookups will be accurate.
+    
+    Source: https://www.allareacodes.com/
+    parameters:
+    @area_code - the area code from a phone number
+    @location - a string combination of city and state
+    """
+    __tablename__ = "areacode_lookup"
+    id = db.Column(db.Integer, primary_key=True)
+    area_code = db.Column(db.String)
+    location = db.Column(db.String)
+
+    def __init__(self,area_code,location):
+        self.area_code = area_code
+        self.location = location
+
 class BackpageAdInfo(db.Model):
     """
     This model gives us a set of specific information from each add scraped from backpage.
@@ -16,6 +40,8 @@ class BackpageAdInfo(db.Model):
     @ad_title - used primarily to uniquely identify backpage ads - since titles are unique
     @phone_number - the phone number used in the ad, can be empty.  This number is stored as a string
     since it should be thought of as immutable.
+    @city - the city the add is from
+    @state - the state the add is from
     @location - the location mentioned in the advertisement 
     @latitude - latitude derived from the location mentioned in the advertisement
     @longitude - longitude derived from the location mentioned in the advertisement
@@ -35,8 +61,10 @@ class BackpageAdInfo(db.Model):
     photos = db.Column(db.String)
     post_id = db.Column(db.String)
     timestamp = db.Column(db.DateTime)
+    city = db.Column(db.String)
+    state = db.Column(db.String)
     
-    def __init__(self,ad_title,phone_number,ad_body,location,latitude,longitude,photos,post_id,timestamp):
+    def __init__(self,ad_title,phone_number,ad_body,location,latitude,longitude,photos,post_id,timestamp,city,state):
         self.ad_title = ad_title
         self.phone_number = phone_number
         self.location = location
@@ -46,6 +74,8 @@ class BackpageAdInfo(db.Model):
         self.photos = photos
         self.post_id = post_id
         self.timestamp = timestamp
+        self.city = city
+        self.state = state
         
         
 class Backpage(db.Model):
