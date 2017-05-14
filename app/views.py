@@ -5,7 +5,10 @@ from app.models import * #todo - import specific objects
 from app.metric_generation import * #todo - import specific objects
 from app.visualize_metrics import * #todo - import specific objects
 from app.geographic_processing import contains
+from flask_graphql import GraphQLView
 import json
+
+app.add_url_rule('/graphql', view_func=GraphQLView.as_view('graphql', graphiql=True))
 
 def to_dict(elem):
     dicter = elem.__dict__

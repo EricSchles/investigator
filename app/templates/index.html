@@ -13,7 +13,8 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
     <!-- Custom CSS -->
     <link href="{{ url_for('static', filename='css/grayscale.css' ) }}" rel="stylesheet">
 
@@ -143,6 +144,7 @@
                 <p>InvestiGator is an open source tool used to understand human trafficking.</p>
                 <p>
             </div>
+            <div id="map"></div>
         </div>
     </section>
     </header>
@@ -188,14 +190,18 @@
 
     <!-- Plugin JavaScript -->
     <script src="{{url_for('static', filename='js/jquery.easing.min.js' ) }}"></script>
-
     <!-- Custom Theme JavaScript -->
-    <script src="{{ url_for('static', filename='js/grayscale.js')}}"></script>
+    <script src="{{url_for('static', filename='js/grayscale.js')}}"></script>
+    <script src="{{url_for('static', filename='js/leaflet.js')}}"></script>
     <script src="{{url_for('static', filename='navbarcustom.js')}}"></script>
 
     <script>
   /* jsonp form to email function */
-  /* jsonp form to email function */
+    var map = L.map('map').setView([40.730610, -73.935242], 12);
+    addressPoints = $.get("http://localhost:5000/api/coordinates/all");
+    addressPoints = addressPoints.map(function (p) { return [p[0], p[1]]; });
+    var heat = L.heatLayer(addressPoints).addTo(map);
+
   $('form').submit(function() {
     var url = $(this).attr("action");
     var params = $(this).serialize();

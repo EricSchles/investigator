@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 This code is used to pull hard attributes out of text from backpage ads and other services related to trafficking
 
