@@ -6,6 +6,22 @@ from app.metric_generation import * #todo - import specific objects
 from app.visualize_metrics import * #todo - import specific objects
 from app.geographic_processing import contains
 import json
+from elasticsearch import Elasticsearch
+
+#https://elasticsearch-py.readthedocs.io/en/master/
+index_name = "image_search_index"
+
+host = "http://localhost:9200"
+es = Elasticsearch(host)
+
+#how to do search courtesy of: https://marcobonzanini.com/2015/02/02/how-to-query-elasticsearch-with-python/
+@app.route('/search', methods=['GET','POST'])
+def search():
+    query = request.form.get("query")
+    print("got past query",query)
+    results = es.search(index=index_name,body={"query":{"match": {"label":query}}})
+    print("got to results")
+    return render_template('results.html', results=results)
 
 def to_dict(elem):
     dicter = elem.__dict__

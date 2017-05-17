@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+
+<body>
+<div id="content">
+
+{% if results %}
+
+<h4>Results</h4>
+	<p>{{ results["hits"]["total"] }} results ({{results["took"]}}ms)</p>
+
+<div id="container" class="row">
+
+{% for doc in results["hits"]["hits"] %}
+
+	<img src='{{ url_for("static", filename="images/"+doc["_source"]["file"]) }}' />
+	
+
+{% endfor %}
+</div>
+{% endif %}
+
+</div>
+
+</body>
+</html>
