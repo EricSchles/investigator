@@ -7,7 +7,55 @@ I am using Postgres, Flask-SQLAlchemy for this application.
 For an introduction to Flask-SQLAlchemy check out: http://flask-sqlalchemy.pocoo.org/2.1/
 """ 
 from app import db
-    
+
+class ImageToText(db.Model):
+    """
+    This model stores the lookup for an image to text from Keras Models defined in image_processing.py
+    parameters:
+    @file_name - the filename being processed
+    @labels - the set of labels associated with the filename
+    @state - the state or province the ad appeared in
+    @city - the city or town the ad appeared in
+    @location - the location parsed from the ad
+    @url - the url of the ad
+    @timestamp - the timestamp of when the ad was scraped
+    @phone_number - the phone number associated with the ad
+    @latitude - latitude parsed from the ad
+    @longitude - longitude parsed from the ad
+    @image_url - image_url used for image lookup
+    """
+
+    __tablename__ = 'image_to_text'
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String)
+    labels = db.Column(db.String)
+    state = db.Column(db.String)
+    city = db.Column(db.String)
+    location = db.Column(db.String)
+    url = db.Column(db.String)
+    timestamp = db.Column(db.DateTime)
+    phone_number = db.Column(db.String)
+    latitude = db.Column(db.String)
+    longitude = db.Column(db.String)
+    image_url = db.Column(db.String)
+
+    def __init__(
+            self, image_url, filename, labels, state, city,
+            location, url, timestamp, phone_number,
+            latitude, longitude
+    ):
+        self.image_url = image_url
+        self.filename = filename
+        self.labels = labels
+        self.state = state
+        self.city = city
+        self.location = location
+        self.url = url
+        self.timestamp = timestamp
+        self.phone_number = phone_number
+        self.latitude = latitude
+        self.longitude = longitude
+        
 class AreaCodeLookup(db.Model):
     """
     This model provides a look up for phone number area codes and aids in converting them to latitude, longitude.

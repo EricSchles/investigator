@@ -47,7 +47,7 @@ def check_for_repeat_ads(url, titles,ads,city,state):
         if isinstance(timestamp,str):
             continue
         else:
-            ad_info = BackpageAdInfo(url,unique_title,phone_number,ad_body,location,latitude,longitude,photo_urls,post_id,timestamp,city,state)
+            ad_info = BackpageAdInfo(new_ads[ind],unique_title,phone_number,ad_body,location,latitude,longitude,photo_urls,post_id,timestamp,city,state)
             db.session.add(ad_info)
             db.session.commit()
     return new_ads    

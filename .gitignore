@@ -1,5 +1,5 @@
+app/static/images
 .DS_Store
-app/static/images/
 *.creds
 *.pyc
 *.py~
