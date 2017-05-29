@@ -1,0 +1,40 @@
+1496082750175	geckodriver	INFO	Listening on 127.0.0.1:57599
+1496082751269	geckodriver::marionette	INFO	Starting browser /Applications/Firefox.app/Contents/MacOS/firefox-bin with args ["-marionette"]
+1496082753359	Marionette	INFO	Listening on port 57608
+1496082753427	Marionette	WARN	TLS certificate errors will be ignored for this session
+2017-05-29 14:32:33.853 plugin-container[83692:1718748] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x953b, name = 'com.apple.tsm.portname'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+2017-05-29 14:32:33.856 plugin-container[83692:1718748] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x9803, name = 'com.apple.CFPasteboardClient'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+1496082769725	geckodriver	INFO	Listening on 127.0.0.1:57661
+1496082770770	geckodriver::marionette	INFO	Starting browser /Applications/Firefox.app/Contents/MacOS/firefox-bin with args ["-marionette"]
+1496082772715	Marionette	INFO	Listening on port 57670
+1496082772796	Marionette	WARN	TLS certificate errors will be ignored for this session
+2017-05-29 14:32:53.217 plugin-container[83704:1719043] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x963b, name = 'com.apple.tsm.portname'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+2017-05-29 14:32:53.220 plugin-container[83704:1719043] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x9903, name = 'com.apple.CFPasteboardClient'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+2017-05-29 14:33:03.487 plugin-container[83708:1719241] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x963b, name = 'com.apple.tsm.portname'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+2017-05-29 14:33:03.488 plugin-container[83708:1719241] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x9903, name = 'com.apple.CFPasteboardClient'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+2017-05-29 14:33:07.696 plugin-container[83709:1719344] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x9637, name = 'com.apple.tsm.portname'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+2017-05-29 14:33:07.698 plugin-container[83709:1719344] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x9903, name = 'com.apple.CFPasteboardClient'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+1496082826293	geckodriver	INFO	Listening on 127.0.0.1:57777
+1496082827342	geckodriver::marionette	INFO	Starting browser /Applications/Firefox.app/Contents/MacOS/firefox-bin with args ["-marionette"]
+1496082829489	Marionette	INFO	Listening on port 57786
+1496082829582	Marionette	WARN	TLS certificate errors will be ignored for this session
+2017-05-29 14:33:50.070 plugin-container[83728:1719803] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x963b, name = 'com.apple.tsm.portname'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+2017-05-29 14:33:50.074 plugin-container[83728:1719803] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x9903, name = 'com.apple.CFPasteboardClient'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+1496082869773	geckodriver	INFO	Listening on 127.0.0.1:57881
+1496082870826	geckodriver::marionette	INFO	Starting browser /Applications/Firefox.app/Contents/MacOS/firefox-bin with args ["-marionette"]
+1496082872820	Marionette	INFO	Listening on port 57891
+1496082872928	Marionette	WARN	TLS certificate errors will be ignored for this session
+2017-05-29 14:34:33.367 plugin-container[83749:1720298] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x953b, name = 'com.apple.tsm.portname'
+See /usr/include/servers/bootstrap_defs.h for the error codes.
+2017-05-29 14:34:33.369 plugin-container[83749:1720298] *** CFMessagePort: bootstrap_register(): failed 1100 (0x44c) 'Permission denied', port = 0x9803, name = 'com.apple.CFPasteboardClient'
+See /usr/include/servers/bootstrap_defs.h for the error codes.

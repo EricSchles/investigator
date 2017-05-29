@@ -13,7 +13,7 @@ number_of_posts_in_adults_hour_over_hour
 _prepare_for_month_over_month_timeseries
 overall_number_of_posts_in_adults_month_over_month
 """
-from app.models import Backpage,BackpageAdInfo
+from app.models import Backpage, BackpageAdInfo, AreaCodeLookup
 from datetime import datetime
 from app.nlp_tools import phrase_frequency,document_similarity,phrase_frequency_ads
 from app.tools import generate_connected_graph
@@ -167,3 +167,7 @@ def parse_number(phone_numbers):
 def get_locations():
     list_of_ads = BackpageAdInfo.query.all()
     return [[ad.longitude,ad.latitude] for ad in list_of_ads if ad.latitude != 'no address information' and ad.longitude !='no address information' and ad.latitude and ad.longitude]
+
+def get_area_code_locations():
+    area_codes = AreaCodeLookup.query.all()
+    return [[area_code.longitude, area_code.latitude] for area_code in area_codes if area_code.latitude != 'no address information' and area_code.longitude !='no address information' and area_code.latitude and area_code.longitude]

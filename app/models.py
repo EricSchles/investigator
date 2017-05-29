@@ -38,11 +38,12 @@ class ImageToText(db.Model):
     latitude = db.Column(db.String)
     longitude = db.Column(db.String)
     image_url = db.Column(db.String)
-
+    throw_away = db.Column(db.String)
+    
     def __init__(
             self, image_url, filename, labels, state, city,
             location, url, timestamp, phone_number,
-            latitude, longitude
+            latitude, longitude,throw_away
     ):
         self.image_url = image_url
         self.filename = filename
@@ -55,7 +56,9 @@ class ImageToText(db.Model):
         self.phone_number = phone_number
         self.latitude = latitude
         self.longitude = longitude
-        
+        self.throw_away = throw_away
+
+
 class AreaCodeLookup(db.Model):
     """
     This model provides a look up for phone number area codes and aids in converting them to latitude, longitude.
@@ -69,16 +72,26 @@ class AreaCodeLookup(db.Model):
     Source: https://www.allareacodes.com/
     parameters:
     @area_code - the area code from a phone number
-    @location - a string combination of city and state
+    @city - a string city
+    @state - a string state
+    @latitude - latitude for the area code
+    @longitude - longitude for the area code
     """
     __tablename__ = "areacode_lookup"
     id = db.Column(db.Integer, primary_key=True)
     area_code = db.Column(db.String)
-    location = db.Column(db.String)
-
-    def __init__(self,area_code,location):
+    city = db.Column(db.String)
+    state = db.Column(db.String)
+    latitude = db.Column(db.String)
+    longitude = db.Column(db.String)
+    
+    def __init__(self, area_code, city, state, latitude, longitude):
         self.area_code = area_code
-        self.location = location
+        self.city = city
+        self.state = state
+        self.latitude = latitude
+        self.longitude = longitude
+
 
 class BackpageAdInfo(db.Model):
     """

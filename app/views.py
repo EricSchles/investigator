@@ -127,3 +127,9 @@ def map_visual():
     locations = get_locations()
     locations = [to_geojson(location) for location in locations]
     return render_template("map_visual.html",locations=json.dumps(locations))
+
+@app.route("/area_code_map",methods=["GET","POST"])
+def area_code_map():
+    locations = get_area_code_locations()
+    locations = [to_geojson(location) for location in locations]
+    return render_template("map_visual.html",locations=json.dumps(locations))
