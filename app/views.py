@@ -122,11 +122,26 @@ def to_geojson(coordinates):
         }
     return dicter
 
+def to_heatmap_format(coordinates):
+    dicter = {}
+    dicter["lat"] = float(coordinates[1])
+    dicter["lng"] = float(coordinates[0])
+    dicter["count"] = 3
+    return dicter
+    
 @app.route("/map_visual",methods=["GET","POST"])
 def map_visual():
     locations = get_locations()
     locations = [to_geojson(location) for location in locations]
     return render_template("map_visual.html",locations=json.dumps(locations))
+
+
+@app.route("/heat_map_visual", methods=["GET","POST"])
+def heat_map_visual():
+    locations = get_locations()
+    locations = [to_heatmap_format(location) for location in locations]
+    return render_template("heat_map_visual.html",locations=json.dumps(locations))
+
 
 @app.route("/area_code_map",methods=["GET","POST"])
 def area_code_map():
