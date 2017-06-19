@@ -15,8 +15,25 @@ from datetime import datetime
 import random
 from app.text_parser import phone_number_parse, get_lat_long,clean_location_string,strip_post_id
 from app.nlp_tools import *
+from collections import namedtuple
 
-def check_for_repeat_ads(url, titles,ads,city,state):
+
+AdInfo = namedtuple(
+    'AdInfo',
+    [
+        'phone_number',
+        'ad_body',
+        'location',
+        'latitude',
+        'longitude',
+        'post_id',
+        'timestamp',
+        'photos'
+    ]
+)
+
+
+def check_for_repeat_ads(url, titles, ads, city, state):
     """
     This method checks for repeat ads.  The problem is ads update in a unpredictable fashion, therefore you don't want to store ads
     that you've already scraped.  This method checks the ad's already scraped and compares titles.  If the titles are different,
@@ -30,30 +47,34 @@ def check_for_repeat_ads(url, titles,ads,city,state):
 
     Notes - we uniquely identify on title and then pass back the urls that don't currently exist in our system.
     """
-    if BackpageAdInfo.query.all() != []:
-        unique_titles = set([elem.ad_title for elem in BackpageAdInfo.query.all()])
-    else:
-        unique_titles = []
-    new_ads = []
-    new_unique_titles = []
-    for ind,val in enumerate(titles):
-        if val in unique_titles:
-            continue
-        else:
-            new_ads.append(ads[ind])
-            new_unique_titles.append(val)
-    for ind,unique_title in enumerate(new_unique_titles):
-        phone_number, ad_body,location,latitude, longitude, post_id,timestamp,photo_urls = scrape_ad(new_ads[ind],city)
-        if isinstance(timestamp,str):
-            continue
-        else:
-            ad_info = BackpageAdInfo(new_ads[ind],unique_title,phone_number,ad_body,location,latitude,longitude,photo_urls,post_id,timestamp,city,state)
-            db.session.add(ad_info)
+    unique_titles = {elem.ad_title
+                     for elem in BackpageAdInfo.query.all()}
+    new_unique_titles, new_ads = [], []
+    for title, ad in zip(titles,ads):
+        if title not in unique_titles:
+            new_ads.append(ad)
+            new_unique_titles.append(title)
+    return new_unique_titles, new_ads
+
+
+def save_to_database(unique_titles, ads, city, state):
+    for unique_title, ad in zip(unique_titles, ads):
+        ad_info = scrape_ad(ad, city)
+        if not isinstance(ad_info.timestamp, str):
+            backpage_ad_info = BackpageAdInfo(
+                ad,
+                unique_title,
+                city=city,
+                state=state,
+                **ad_info._asdict()
+            )
+            db.session.add(backpage_ad_info)
             db.session.commit()
-    return new_ads    
+
 
 def clean_string(string):
     return string.strip().encode("ascii","ignore")
+
 
 def scrape_backpage(url, city, state):
     """
@@ -66,24 +87,33 @@ def scrape_backpage(url, city, state):
     parameters:
     @url - this is expected to be a string.  This is the url for the place we are scraping.  There is a lot of information encoded here - the location 
     we are scraping, defined by the subdomain and the part of backpage we are scraping, defined by everything after the '.com/'
+    @city - the city being scraped (for USA)
+    @state - the state being scraped (for USA)
     """
     
     while True:
         r = requests.get(url)
         try:
-            html = lxml.html.fromstring(clean_string(r.text))
+            cleaned_text = clean_string(r.text)
+            html = lxml.html.fromstring(cleaned_text)
         except lxml.etree.ParserError:
-            html = lxml.html.fromstring(r.text.encode('utf-8','strict'))
-        ads = html.xpath("//div[contains(@class, 'cat')]/a/@href")
-        #handles ads we've already scraped once to avoid over counting
-        titles = [elem.text_content() for elem in html.xpath("//div[contains(@class, 'cat')]/a")]
-        ads = check_for_repeat_ads(url, titles, ads, city, state)
-        if len(ads) == 0:
-            continue
-        bp = Backpage(datetime.now(),len(ads))
-        db.session.add(bp)
-        db.session.commit()
+            utf8_encoded_string = r.text.encode('utf-8','strict')
+            html = lxml.html.fromstring(utf8_encoded_string)
+        ads, titles = [], []
+        for elem in html.xpath("//div[contains(@class, 'cat')]/a"):
+            ad_url = elem.xpath("@href")[0]
+            ads.append(ad_url)
+            titles.append(elem.text_content())           
+        unique_titles, unique_ads = check_for_repeat_ads(url, titles, ads, city, state)
+        save_to_database(unique_titles, unique_ads, city, state)
+        number_unique_ads = len(unique_ads)
+        if number_unique_ads != 0:
+            bp = Backpage(datetime.now(), number_unique_ads)
+            db.session.add(bp)
+            db.session.commit()
+
         time.sleep(random.randint(2, 7))
+
 
 def scrape_ad(url,city):
     r = requests.get(url)
@@ -98,7 +128,7 @@ def scrape_ad(url,city):
     try:
         location = [elem.text_content() for elem in extra_info if "Location:" in elem.text_content()][0]
         location = clean_location_string(location)
-        latitude,longitude = get_lat_long(location,city)
+        latitude, longitude = get_lat_long(location, city)
     except:
         latitude,longitude = '',''
     try:
@@ -112,4 +142,14 @@ def scrape_ad(url,city):
         photo_urls = ''
     other_ads = [elem for elem in html.xpath("//a/@href") if "backpage" in elem]
     phone_number = phone_number_parse(ad_body)
-    return phone_number, ad_body,location,str(latitude),str(longitude),post_id,datetime.now(), photo_urls
+    ad_info = AdInfo(
+        phone_number,
+        ad_body,
+        location,
+        str(latitude),
+        str(longitude),
+        post_id,
+        datetime.now(),
+        photo_urls
+    )
+    return ad_info
