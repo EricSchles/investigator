@@ -1,0 +1,117 @@
+search phone number
+- see the ads 
+
+search for visa, credit card, mastercard, american express
+
+Add ipaddress logging.
+
+Add tied together geographic data points.
+
+spreadsheet upload of ipaddresses.
+
+demographic information,
+language centers,
+educational
+arrest records,
+
+SPAs - potential rates -> public arrest records.  Pop in a phone number or address for an arrest.  
+
+Cross tabulate with other public arrest records.  Incorporation of public arrest records.  Into a map.
+
+Geographic Profiling? -> could be useful for them.
+
+Airline charges -> being able to be able place people and airline charges on a map with a time overlay.
+station codes to lat, long. - http://www.airportcodes.org/
+
+https://en.wikipedia.org/wiki/List_of_Amtrak_stations -> for train station codes.
+
+segmentation by color might be interesting.
+
+Instances like a huge event -> surge in a location.
+
+correlating large events to upticks in trafficking behavior.
+
+blend in is easier.
+
+positive events like concerts and thanksgiving, negative events like super storms.
+
+timeseries prediction policy stuff.
+
+I have a brand new card -> I spent marketing 
+
+quantify risk -> 
+
+Risk rank -> when you generate an alert on someone.  You know what the high priority cases.
+
+External source code ->
+
+Website.
+
+Build this quickly with dummy data.
+
+## Follow up meeting 
+
+Rich -> Has data.
+
+Needs: 
+
+* Recon platform
+* Relevant fresh data sources
+	* fresh screen names -> identities
+	* scraping forums
+	* 
+* advertisements
+	* 
+
+Geo time series -> older are darker to lighter newer:
+
+We have good data -> airline, legs of journeys, Uber to hotels
+
+AWS
+
+1K customers, 5 million transactions, 
+
+Filtering? 
+
+plotting
+
+anomaly detection
+
+going to national and regional events
+
+A number of other views:
+	* time series
+	* percentage of transactions
+
+How much distance has been covered over a set period
+
+Regional events, natural disasters
+
+Talking to Financial institutions?
+
+VIACOM
+
+Mr.Amex -> hates having any transactional outside of our domain.
+
+NDA signed with Amex.
+
+Proposal -> 
+
+"
+This what I do
+This is what I need
+Graphic
+Known transactional data
+deploy a thing
+"
+
+
+
+
+
+
+
+
+
+
+

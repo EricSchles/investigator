@@ -39,6 +39,7 @@ def save_locally(image_url, current_count, meta_data):
 def db_list_parse(db_list):
     return db_list.lstrip("{").rstrip("}").split(",")
 
+
 def image_to_objects(img_path):
     model = VGG16(weights='imagenet')
     img = image.load_img(img_path, target_size=(224, 224))
@@ -47,6 +48,7 @@ def image_to_objects(img_path):
     x = preprocess_input(x)
     preds = model.predict(x)    
     return [label[1] for label in decode_predictions(preds, top=3)[0]]
+
 
 index_name = "image_search_index"
 image_to_labels = {}

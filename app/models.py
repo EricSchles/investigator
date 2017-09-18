@@ -127,7 +127,7 @@ class BackpageAdInfo(db.Model):
     state = db.Column(db.String)
     url = db.Column(db.String)
     
-    def __init__(self,url,ad_title,phone_number,ad_body,location,latitude,longitude,photos,post_id,timestamp,city,state):
+    def __init__(self,url, ad_title, phone_number, ad_body, location, latitude, longitude, photos, post_id,timestamp, city, state):
         self.url = url
         self.ad_title = ad_title
         self.phone_number = phone_number
